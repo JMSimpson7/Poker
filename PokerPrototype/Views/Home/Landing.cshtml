@@ -3,22 +3,24 @@
 }
 @section styles{
     <style>
-        #play-free{
+        #play-free {
             box-shadow: 0 1px 3px rgba(0,0,0,1);
             position: fixed;
             left: 20%;
             right: 20%;
             bottom: 20%;
-            box-shadow
+            box-shadow;
         }
-        body{
+
+        body {
             background: url(http://www.21stbirthdaypartyideas.net/wp-content/uploads/2014/12/21st-Birthday-Party-Ideas-for-Him-poker.jpg) no-repeat center center fixed;
-          -webkit-background-size: cover;
-          -moz-background-size: cover;
-          -o-background-size: cover;
-          background-size: cover;
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-size: cover;
         }
-        .alert{
+
+        .alert {
             border: 1px solid black;
             margin: 25px 25% 10px 25%;
             text-align: center;
@@ -30,8 +32,11 @@
         <a data-toggle="modal" data-target="#myModal" href="#">Log in</a>
     </li>
 }
-@if (ViewBag.Message != null){
+@if (ViewBag.Message != null)
+{
     <div class="alert alert-@ViewBag.MessageType" role="alert">@ViewBag.Message</div>
 }
 
-<a class="box-shadow btn btn-primary btn-lg" id="play-free" href="~/signup">Play for Free &raquo;</a>
+<!--<a class="box-shadow btn btn-primary btn-lg" id="play-free" href="~/signup">Play for Free &raquo;</a>
+    switched button to modal-->
+<a class="box-shadow btn btn-primary btn-lg" id="play-free" data-toggle="modal" data-target="#Register" href="#">Play for Free &raquo;</a>

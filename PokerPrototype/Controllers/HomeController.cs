@@ -12,7 +12,7 @@ namespace PokerPrototype.Controllers
         public ActionResult Index()
         {
             int id = Convert.ToInt32(Session["id"]);
-            if (id > 0 || 1 == 1)
+            if (id > 0)
             {
                 UserModel model = new UserModel(id);
                 return View("Lobby", model);
