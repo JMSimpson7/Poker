@@ -1,0 +1,114 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @RenderSection("styles", required: false)
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @Html.ActionLink("PokerChampions", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li>@Html.ActionLink("About", "About", "")</li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                       @RenderSection("topright", required: true);
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="container body-content">
+        @RenderBody()
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Log in to your account</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group" id="username-group">
+                        <label class="control-label" for="username">Username</label>
+                        <input type="text" class="form-control" id="username">
+                        <span id="username-msg" class="help-block"></span>
+                    </div>
+                    <div class="form-group" id="password-group">
+                        <label class="control-label" for="password">Password</label>
+                        <input type="password" class="form-control" id="password">
+                        <span id="password-msg" class="help-block"></span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-default" href="~/signup">Create Account</a>
+                    <button type="button" id="login-btn" class="btn btn-primary">Log in</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+    <script>
+        $(document).ready(function () {
+
+            $("#login-btn").click(submitLogin);
+            $('#username').on("keyup", function (e) {
+                if (e.keyCode == 13 || e.keyCode == 40) {
+                    $("#password").focus();
+                }
+            });
+            $('#password').on("keyup", function (e) {
+                if (e.keyCode == 13) {
+                    submitLogin();
+                }
+            });
+
+            function submitLogin() {
+                $.post("/login", {
+                    username: $('#username').val(),
+                    password: $('#password').val()
+                },
+                loginHandler);
+            }
+
+
+            function loginHandler(response) {
+                if (response.usernameError.length > 0) {
+                    $("#username-group").addClass("has-error");
+                    $("#username-msg").text(response.usernameError);
+                } else {
+                    $("#username-group").removeClass("has-error");
+                    $("#username-msg").text("");
+                }
+                if (response.passwordError.length > 0) {
+                    $("#password-group").addClass("has-error");
+                    $("#password-msg").text(response.passwordError);
+                } else {
+                    $("#password-group").removeClass("has-error");
+                    $("#password-msg").text("");
+                }
+                if (response.usernameError.length == 0 && response.passwordError.length == 0) {
+                    alert("login successful!\n(I'll delete this alert later)");
+                    window.location.href = '/';
+                }
+            }
+        });
+    </script>
+</body>
+</html>

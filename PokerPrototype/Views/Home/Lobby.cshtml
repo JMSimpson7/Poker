@@ -1,0 +1,82 @@
+﻿@model PokerPrototype.Models.UserModel
+@{
+    ViewBag.Title = "Lobby";
+}
+
+<style media="screen" type="text/css">
+    table {
+        background-color: #4CAF50;
+        color: white;
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    table, th, td {
+        border: 1px solid black;
+    }
+
+    th, td {
+        padding: 15px;
+        text-align: left;
+    }
+
+    tr:hover {
+        background-color: #f5f5f5;
+    }
+
+    th{
+        background-color: #002244;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+        color: black;
+    }
+
+    tr:nth-child(odd) {
+        background-color: #2f2f2f;
+    }
+</style>
+
+@section topright{
+    <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+            Hello, @Model.username <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu">
+            <li><img src="@Model.avatar" /></li>
+            <li>Currency: @Model.currency</li>
+            <li><a href="/logout">log out</a></li>
+        </ul>
+    </li>
+}
+<h2>Lobby</h2>
+<p>You can log out at the top right</p>
+
+@section scripts {
+    <script>
+        $.post("ajax/lobby", ajaxHandler);
+        function ajaxHandler(response) {
+            //alert(JSON.stringify(response));
+            var $table = $("<table></table>");
+            $table.append("<tr><th>Room Name</th><th>Player Count</th><th>blinds</th><tr>")
+            for (var i = 0; i < response.length; i++) {
+                var rooms = response[i];
+                var $line = $("<tr></tr>");
+                //$line.append($("<td></td>").html(rooms.roomID));
+                $line.append($("<td></td>").html(rooms.roomName));
+                $line.append($("<td></td>").html(rooms.currentNumberPlayers + " / " + rooms.maxPlayerCount));
+                //$line.append($("<td></td>").html(rooms.maxPlayerCount));
+                $line.append($("<td></td>").html(rooms.blinds));
+                $table.append($line);
+            }
+            $table.appendTo($("#myDiv"));
+            $table.appendTo(document.body);
+        }
+    </script>
+}
+
+<h2>RoomList</h2>
+
+<div style="overflow-y:auto;" id="myDiv">
+</div>
