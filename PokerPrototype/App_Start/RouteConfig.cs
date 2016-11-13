@@ -18,15 +18,15 @@ namespace PokerPrototype
                 defaults: new { controller = "Home", action = "Logout" }
             );
             routes.MapRoute(
+                name: "room",
+                url: "room/{roomid}",
+                defaults: new { controller = "Room", action = "Index" }
+            );
+            routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}",
                 defaults: new { controller = "Home", action = "Index"}
           
-            );
-            routes.MapRoute(
-                name: "PageNotFound",
-                url: "{*url}",
-                defaults: new { controller = "Home", action = "PageNotFound" }
             );
         }
     }

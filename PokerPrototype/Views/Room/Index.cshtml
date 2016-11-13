@@ -1,0 +1,39 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+@section topright{
+    <li class="dropdown">
+    </li>
+}
+<h2>Room #@ViewBag.roomid</h2>
+
+<input id="message"></input>
+<button id="message-btn" disabled>Send Message</button>
+
+
+@section scripts{
+<script src="http://ajax.aspnetcdn.com/ajax/signalr/jquery.signalr-2.1.0.min.js"></script>
+<script src="~/signalr/hubs"></script>
+<script>
+    var chat = $.connection.chatHub;
+
+    chat.client.alertMessage = function (msg) {
+        alert(msg);
+    }
+
+    chat.client.alertJson = function (model) {
+        alert(JSON.stringify(model))
+    };
+    $.connection.hub.start().done(initConnect).fail(function (reason) {
+            console.log("SignalR connection failed: " + reason);
+    });
+    function initConnect() {
+        alert("connection established")
+        $('#message-btn').prop("disabled", false).click(function () {
+            chat.server.send($("#message").val());
+        });
+    }
+</script>    
+    
+}

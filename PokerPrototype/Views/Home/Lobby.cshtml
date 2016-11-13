@@ -52,8 +52,13 @@
 }
 <h2>Lobby</h2>
 <p>You can log out at the top right</p>
+<button id="sendmessage">Send Message</button>
 
 @section scripts {
+
+
+
+
     <script>
         $.post("ajax/lobby", ajaxHandler);
         function ajaxHandler(response) {
