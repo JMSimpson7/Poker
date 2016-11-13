@@ -13,7 +13,7 @@ namespace PokerPrototype.Hubs
         {
             string connid = Context.ConnectionId;
             Clients.All.alertMessage(message + " from " + connid);
-            //
+            //hello
         }
     }
 }
