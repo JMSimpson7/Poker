@@ -13,10 +13,10 @@
 
 
 @section scripts{
-<script src="http://ajax.aspnetcdn.com/ajax/signalr/jquery.signalr-2.1.0.min.js"></script>
-<script src="~/signalr/hubs"></script>
-<script>
-    var chat = $.connection.chatHub;
+    <script src="http://ajax.aspnetcdn.com/ajax/signalr/jquery.signalr-2.1.0.min.js"></script>
+    <script src="~/signalr/hubs"></script>
+    <script>
+    var chat = $.connection.myHub;
 
     chat.client.alertMessage = function (msg) {
         alert(msg);
@@ -34,6 +34,6 @@
             chat.server.send($("#message").val());
         });
     }
-</script>    
-    
+    </script>
+
 }
