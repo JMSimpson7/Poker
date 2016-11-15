@@ -294,6 +294,7 @@
     <Content Include="Views\Home\Lobby.cshtml" />
     <Content Include="Views\Signup\Index.cshtml" />
     <Content Include="Views\Room\Index.cshtml" />
+    <Content Include="Views\Shared\_ProfileDropdown.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\Ajax\" />

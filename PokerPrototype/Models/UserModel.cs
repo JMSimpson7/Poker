@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MySql.Data.MySqlClient;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -12,11 +13,25 @@ namespace PokerPrototype.Models
         public string avatar;
         public UserModel(int id)
         {
-            if (id == 1)
+            MySqlConnection Conn = new MySqlConnection("server=sql9.freemysqlhosting.net;database=sql9140372;user=sql9140372;password=WSx2C8iRZx;");
+            var cmd = new MySql.Data.MySqlClient.MySqlCommand();
+            Conn.Open();
+            cmd.Connection = Conn;
+            cmd.CommandText = "SELECT username,currency,avatar FROM users WHERE id = @id";
+            cmd.Prepare();
+            cmd.Parameters.AddWithValue("@id", id);
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            if (rdr.Read())
             {
-                username = "josh";
-                currency = 777;
-                avatar = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSB8XnaVskUDWYJwdEA4OG0g8SUuubshqXrA5xA9px9_NgrORMHzHpmMBA";
+                username = rdr[0].ToString();
+                currency = Convert.ToInt32(rdr[1]);
+                avatar = rdr[2].ToString();
+            }
+            else
+            {
+                username = "DEBUGGING MODE";
+                currency = 0;
+                avatar = "";
             }
         }
     }
