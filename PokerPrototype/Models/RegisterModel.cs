@@ -22,7 +22,7 @@ namespace PokerPrototype.Controllers
         {
             success = true;
             //NEED TO ADD ERRORS FOR OTHER FIELDS
-            usernameError = passwordError = "";
+            usernameError = emailError = passwordError = confirmError = "";
             if (password.Length == 0)
             {
                 success = false;
