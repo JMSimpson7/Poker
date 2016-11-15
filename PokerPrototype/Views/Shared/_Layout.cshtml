@@ -71,15 +71,15 @@
                     <h4 class="modal-title" id="RegisterLabel">Create an Account</h4>
                 </div>
                 <div class="modal-body">
+                    <div class="form-group" id="register-username-group">
+                        <label class="control-label" for="register-username">Username</label>
+                        <input type="text" class="form-control" id="register-username">
+                        <span id="register-username-msg" class="help-block"></span>
+                    </div>
                     <div class="form-group" id="register-email-group">
                         <label class="control-label" for="register-email">Email</label>
                         <input type="text" class="form-control" id="register-email" />
                         <span id="register-email-msg" class="help-block"></span>
-                    </div>
-                    <div class="form-group" id="register-username-group">
-                        <label class="control-label" for="register-username">Username</label>
-                        <input type="text" class="form-control" id="register-username">
-                        <span id="RegisteUsername-msg" class="help-block"></span>
                     </div>
                     <div class="form-group" id="register-password-group">
                         <label class="control-label" for="register-password">Password</label>
@@ -139,7 +139,7 @@
             });
             $('#register-confirm').on("keyup", function (e) {
                 if (e.keyCode == 13) {
-                    $("#register-username").focus();
+                    submitRegister();
                 }
             });
 
@@ -157,7 +157,7 @@
                     email: $('#register-email').val(),
                     username: $('#register-username').val(),
                     password: $('#register-password').val(),
-                    passwordConfirm: $('register-confirm').val()
+                    confirm: $('#register-confirm').val()
                 }, registerHandler);
             }
 
@@ -191,6 +191,13 @@
                         $("#register-username-group").removeClass("has-error");
                         $("#register-username-msg").text("");
                     }
+                    if (response.emailError.length > 0) {
+                        $("#register-email-group").addClass("has-error");
+                        $("#register-email-msg").text(response.emailError);
+                    } else {
+                        $("#register-email-group").removeClass("has-error");
+                        $("#register-email-msg").text("");
+                    }
                     if (response.passwordError.length > 0) {
                         $("#register-password-group").addClass("has-error");
                         $("#register-password-msg").text(response.passwordError);
@@ -198,9 +205,9 @@
                         $("#register-password-group").removeClass("has-error");
                         $("#register-password-msg").text("");
                     }
-                    if (1 > 0) {
+                    if (response.confirmError.length > 0) {
                         $("#register-confirm-group").addClass("has-error");
-                        $("#register-confirm-msg").text(JSON.stringify(response));
+                        $("#register-confirm-msg").text(response.confirmError);
                     } else {
                         $("#register-confirm-group").removeClass("has-error");
                         $("#register-confirm-msg").text("");

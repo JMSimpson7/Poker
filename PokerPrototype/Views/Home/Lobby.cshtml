@@ -46,7 +46,8 @@
         <ul class="dropdown-menu">
             <li><img src="@Model.avatar" /></li>
             <li>Currency: @Model.currency</li>
-            <li><a href="/logout">log out</a></li>
+            <!--<li><a href="/profile">Edit Profile</li>-->
+            <li><a href="/logout">Log Out</a></li>
         </ul>
     </li>
 }
@@ -69,7 +70,7 @@
                 var rooms = response[i];
                 var $line = $("<tr></tr>");
                 //$line.append($("<td></td>").html(rooms.roomID));
-                $line.append($("<td></td>").html(rooms.roomName));
+                $line.append("<td><a href='room/" + i + "'>" + rooms.roomName + "</a></td>");
                 $line.append($("<td></td>").html(rooms.currentNumberPlayers + " / " + rooms.maxPlayerCount));
                 //$line.append($("<td></td>").html(rooms.maxPlayerCount));
                 $line.append($("<td></td>").html(rooms.blinds));

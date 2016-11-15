@@ -13,41 +13,42 @@ namespace PokerPrototype.Controllers
     public class RegisterModel
     {
         [System.Web.Script.Serialization.ScriptIgnore]
-        public int success { get; set; }
+        public bool success { get; set; }
         public string usernameError { get; set; }
         public string passwordError { get; set; }
-        public string passwordConfirmError { get; set; }
+        public string confirmError { get; set; }
         public string emailError { get; set; }
-        public RegisterModel(string email, string username, string password, string passwordConfirm)
+        public RegisterModel(string email, string username, string password, string confirm)
         {
-            success = -1;
+            success = true;
             //NEED TO ADD ERRORS FOR OTHER FIELDS
             usernameError = passwordError = "";
             if (password.Length == 0)
             {
+                success = false;
                 passwordError = "Enter a password";
             }
-            else
-            if (passwordConfirm.Length == 0)
+            if (confirm.Length == 0)
             {
-                passwordConfirmError = "Confirm your password";
+                success = false;
+                confirmError = "Confirm your password";
             }
-            else
             if (username.Length == 0)
             {
+                success = false;
                 usernameError = "Enter a username";
             }
-            else
             if (email.Length == 0)
             {
+                success = false;
                 emailError = "Enter an email";
             }
-            else
-            if (password.Equals(passwordConfirm) == false)
+            if (password.Equals(confirm) == false)
             {
-                passwordConfirmError = "Passwords do not match";
+                success = false;
+                confirmError = "Passwords do not match";
             }
-            else
+            if (success)
             {
                 try
                 {
@@ -61,11 +62,12 @@ namespace PokerPrototype.Controllers
                     //It goes without saying, but in the future we should avoid storing passwords
                     //Also, since I assume there's no field for it, email info is currently
                     //being tossed away
-                    cmd.CommandText = "INSERT into users(username, password) VALUES (@user,@pass) ";
+                    cmd.CommandText = "INSERT into users(username, password, email) VALUES (@user,@pass,@email) ";
                     cmd.Prepare();
                     cmd.Parameters.AddWithValue("@user", username);
                     cmd.Parameters.AddWithValue("@pass", password);
-                    success = cmd.ExecuteNonQuery();
+                    cmd.Parameters.AddWithValue("@email", email);
+                    success = cmd.ExecuteNonQuery() > 0;
 
 
                     /*Shouldn't need this chunk but leaving it here just in case
@@ -74,10 +76,6 @@ namespace PokerPrototype.Controllers
                         id = Convert.ToInt32(rdr[0]);
                     } else
                     {
-                        //need just enough info to give users something to say 
-                        //to support without giving enough for attacks
-                        //maybe use animal codenames?
-                        passwordError = "Something went wrong!";
                     }*/
                 }
                 catch (Exception ex)

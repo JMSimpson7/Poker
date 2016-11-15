@@ -18,15 +18,23 @@ namespace PokerPrototype.Controllers
 
             return Json(model, JsonRequestBehavior.AllowGet);
         }
-        public ActionResult Register(string email, string username, string password, string passwordConfirm)
+        public ActionResult Register(string email, string username, string password, string confirm)
         {
-            RegisterModel register = new RegisterModel(email, username, password, passwordConfirm);
-            if (register.success > 0)
+            RegisterModel register = new RegisterModel(email, username, password, confirm);
+            if (register.success)
             {
                 Login(username, password);
             }
             return Json(register, JsonRequestBehavior.AllowGet);
         }
+        /*public ActionResult EditProfile(string email, string avatar)
+        {
+            EditProfile change = new EditProfile(email, avatar);
+            if (change.success > 0)
+                
+
+            return Json(change, JsonRequestBehavior.AllowGet);
+        }*/
 
 
         // GET: Ajax
