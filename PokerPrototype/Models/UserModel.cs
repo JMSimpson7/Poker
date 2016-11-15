@@ -11,6 +11,7 @@ namespace PokerPrototype.Models
         public string username { get; set; }
         public int currency { get; set; }
         public string avatar;
+        private string email { get; set; }
         public UserModel(int id)
         {
             MySqlConnection Conn = new MySqlConnection("server=sql9.freemysqlhosting.net;database=sql9140372;user=sql9140372;password=WSx2C8iRZx;");
@@ -33,6 +34,10 @@ namespace PokerPrototype.Models
                 currency = 0;
                 avatar = "";
             }
+        }
+        public string getEmail()
+        {
+            return email;
         }
     }
 }

@@ -23,6 +23,11 @@ namespace PokerPrototype
                 defaults: new { controller = "Room", action = "Index" }
             );
             routes.MapRoute(
+                name: "profile",
+                url: "profile/{username}",
+                defaults: new { controller = "Home", action = "Profile" }
+            );
+            routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}",
                 defaults: new { controller = "Home", action = "Index" }

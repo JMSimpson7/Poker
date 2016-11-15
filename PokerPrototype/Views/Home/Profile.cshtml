@@ -1,0 +1,12 @@
+﻿@model PokerPrototype.Models.ProfileModel
+
+@section topright{
+    @Html.Partial("_ProfileDropdown",Model.User)
+}
+
+@{
+    ViewBag.Title = "Profile";
+}
+
+<h2>Profile</h2>
+
