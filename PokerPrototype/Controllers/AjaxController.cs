@@ -27,7 +27,7 @@ namespace PokerPrototype.Controllers
             }
             return Json(register, JsonRequestBehavior.AllowGet);
         }
-        /*public ActionResult EditProfile(string email, string avatar)
+        /*public ActionResult Currency(string email, string avatar)
         {
             EditProfile change = new EditProfile(email, avatar);
             if (change.success > 0)
