@@ -1,0 +1,78 @@
+﻿<div class="modal fade" id="fund-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="RegisterLabel">Create an Account</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group row" id="amount-group">
+                    <div class="col-sm-3">
+                        <label class="control-label" for="amount-input">Amount (USD)</label>
+                    </div>
+                    <div class="col-sm-9">
+                        <input type="number" class="form-control" id="amount-input" />
+                    </div>
+                    <div class="col-sm-3"></div>
+                    <div class="col-sm-9">
+                        <span id="amount-msg" class="help-block"></span>
+                    </div>
+                </div>
+                <div class="form-group row" id="name-group">
+                    <div class="col-sm-3">
+                        <label class="control-label" for="name-input">Name on Card</label>
+                    </div>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" id="name-input" />
+                    </div>
+                    <div class="col-sm-3"></div>
+                    <div class="col-sm-9">
+                        <span id="name-msg" class="help-block"></span>
+                    </div>
+                </div>
+                <div class="form-group row" id="card-number-group">
+                    <div class="col-sm-3">
+                        <label class="control-label" for="card-number-input">Card Number</label>
+                    </div>
+                    <div class="col-sm-9">
+                        <input type="number" class="form-control" id="card-number-input" />
+                    </div>
+                    <div class="col-sm-3"></div>
+                    <div class="col-sm-9">
+                        <span id="card-number-msg" class="help-block"></span>
+                    </div>
+                </div>
+                <div class="form-group row" id="expire-group">
+                    <div class="col-sm-3">
+                        <label class="control-label" for="expire-input">Expires</label>
+                    </div>
+                    <div class="col-sm-9">
+                        <input type="number" class="form-control" id="expire-input" />
+                    </div>
+                    <div class="col-sm-3"></div>
+                    <div class="col-sm-9">
+                        <span id="expire-msg" class="help-block"></span>
+                    </div>
+                </div>
+                <div class="form-group row" id="cvc-group">
+                    <div class="col-sm-3">
+                        <label class="control-label" for="cvc-input">CVC</label>
+                    </div>
+                    <div class="col-sm-9">
+                        <input type="number" class="form-control" id="cvc-input" />
+                    </div>
+                    <div class="col-sm-3"></div>
+                    <div class="col-sm-9">
+                        <span id="cvc-msg" class="help-block"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <!-- Change These-->
+                <!--  <a class="btn btn-default" href="~/Register">Create Account</a>-->
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" id="currency-btn" class="btn btn-primary">Buy Currency</button>
+            </div>
+        </div>
+    </div>
+</div>

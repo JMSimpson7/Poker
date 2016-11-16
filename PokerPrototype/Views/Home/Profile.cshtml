@@ -10,55 +10,8 @@
 
 <h2>@Model.User.username</h2>
 
-<div class="modal fade" id="Currency" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="RegisterLabel">Create an Account</h4>
-            </div>
-            <div class="modal-body">
-                <div class="form-group" id="user-password-group">
-                    <label class="control-label" for="user-password">Enter Password</label>
-                    <input type="password" class="form-control" id="user-password" />
-                    <span id="user-password-msg" class="help-block"></span>
-                </div>
-                <div class="form-group" id="currency-card-name-group">
-                    <label class="control-label" for="currency-card-name">Name on Card</label>
-                    <input type="text" class="form-control" id="currency-card-name">
-                    <span id="currency-card-name-msg" class="help-block"></span>
-                </div>
-                <div class="form-group" id="card-number-group">
-                    <label class="control-label" for="card-number">Card Number</label>
-                    <input type="text" class="form-control" id="card-number">
-                    <span id="currency-number-msg" class="help-block"></span>
-                </div>
-                <div class="form-group" id="card-number-confirm-group">
-                    <label class="control-label" for="card-number-confirm">Confirm Card Number</label>
-                    <input type="text" class="form-control" id="card-number-confirm">
-                    <span id="currency-number-msg" class="help-block"></span>
-                </div>
-                <div class="form-group" id="card-expiration-group">
-                    <label class="control-label" for="card-expiration">Card Expiration Month/Year</label>
-                    <input type="text" class="form-control" id="card-expiration">
-                    <span id="card-expiration-msg" class="help-block"></span>
-                </div>
-                <div class="form-group" id="card-cvc-group">
-                    <label class="control-label" for="card-cvc">Enter CVC Code</label>
-                    <input type="password" class="form-control" id="card-cvc">
-                    <span id="card-cvc-msg" class="help-block"></span>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <!-- Change These-->
-                <!--  <a class="btn btn-default" href="~/Register">Create Account</a>-->
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" id="currency-btn" class="btn btn-primary">Buy Currency</button>
-            </div>
-        </div>
-    </div>
-</div>
-
+<a data-toggle="modal" data-target="#fund-modal" href="#">Log in</a>
+@Html.Partial("_AddFunds")
 @section scripts{
     
     
