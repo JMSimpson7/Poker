@@ -8,12 +8,187 @@
     ViewBag.Title = "Profile";
 }
 
-<h2>@Model.User.username</h2>
+<h1>@Model.User.username > Edit Profile</h1 >
 
-<a data-toggle="modal" data-target="#fund-modal" href="#">Log in</a>
-@Html.Partial("_AddFunds")
+
+<h2>Change Avatar</h2>
+
+<div class="row">
+    <div class="col-sm-3">
+        <img id="avatar"src="@Model.User.avatar" />
+    </div>
+    <div class="col-sm-9">
+        <div class="form-group row" id="file-group">
+            <div class="col-sm-3">
+                <label class="control-label" for="file-input">Upload File</label>
+            </div>
+            <div class="col-sm-9">
+                <input type="file" class="form-control" id="file-input" value="Browse" />
+            </div>
+            <div class="col-sm-3"></div>
+            <div class="col-sm-9">
+                <span id="file-msg" class="help-block"></span>
+            </div>
+            <div class="col-sm-3"></div>
+            <div class="col-sm-9">
+                <button id="file-btn" class="btn btn-primary" disabled>Save Changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h2 style="clear: both">Change Password</h2>
+<div class="form-group row" id="old-password-group">
+    <div class="col-sm-3">
+        <label class="control-label" for="old-password-input">enter current password</label>
+    </div>
+    <div class="col-sm-9">
+        <input type="password" class="form-control" id="old-password-input" />
+    </div>
+    <div class="col-sm-3"></div>
+    <div class="col-sm-9">
+        <span id="old-password-msg" class="help-block"></span>
+    </div>
+</div>
+<div class="form-group row" id="new-password-group">
+    <div class="col-sm-3">
+        <label class="control-label" for="new-password-input">enter new password</label>
+    </div>
+    <div class="col-sm-9">
+        <input type="password" class="form-control" id="new-password-input" />
+    </div>
+    <div class="col-sm-3"></div>
+    <div class="col-sm-9">
+        <span id="new-password-msg" class="help-block"></span>
+    </div>
+</div>
+<div class="form-group row" id="confirm-password-group">
+    <div class="col-sm-3">
+        <label class="control-label" for="confirm-password-input">re-enter new password</label>
+    </div>
+    <div class="col-sm-9">
+        <input type="password" class="form-control" id="confirm-password-input" />
+    </div>
+    <div class="col-sm-3"></div>
+    <div class="col-sm-9">
+        <span id="confirm-password-msg" class="help-block"></span>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-3"></div>
+    <div class="col-sm-9">
+        <button id="password-btn" class="btn btn-primary">Submit</button>
+    </div>
+</div>
+
+
+<h1>Change Email</h1>
+<div class="row">
+    <div class="col-sm-3">
+        <label class="control-label">Current Email</label>
+    </div>
+    <div class="col-sm-9">
+        <p>@Model.email</p>
+    </div>
+</div>
+<div class="form-group row" id="email-group">
+    <div class="col-sm-3">
+        <label class="control-label" for="email-input">enter new email</label>
+    </div>
+    <div class="col-sm-9">
+        <input type="text" class="form-control" id="email-input" />
+    </div>
+    <div class="col-sm-3"></div>
+    <div class="col-sm-9">
+        <span id="email-msg" class="help-block"></span>
+    </div>
+</div>
+<div class="form-group row" id="email-password-group">
+    <div class="col-sm-3">
+        <label class="control-label" for="email-password-input">enter password</label>
+    </div>
+    <div class="col-sm-9">
+        <input type="text" class="form-control" id="email-password-input" />
+    </div>
+    <div class="col-sm-3"></div>
+    <div class="col-sm-9">
+        <span id="email-password-msg" class="help-block"></span>
+    </div>
+    <div class="col-sm-3"></div>
+    <div class="col-sm-9">
+        <button id="email-btn" class="btn btn-primary">Submit</button>
+    </div>
+</div>
+
+@Html.Partial("_AddFund")
 @section scripts{
-    
-    
+    @Html.Partial("_AddFundScript")
+<script>
+    var dataString = "";
+function getDataString(file) {
+    var file = document.querySelector('input[type=file]').files[0];
+    var reader = new FileReader();
+    reader.onload = function (event) {
+        var image = new Image();
+        image.onload = function () {
+            var canvas = document.createElement('canvas');
+            canvas.width = 128;
+            canvas.height = 128;
+            if (image.height > image.width) {
+                var offset = (image.height - image.width) / 2;
+
+                canvas.width = image.width;
+                canvas.height = image.width;
+                canvas.getContext('2d').drawImage(this, 0, offset, image.width, image.width, 0, 0, image.width, image.width);
+
+                while (canvas.width > 320) {
+                    var canvasTemp = document.createElement('canvas');
+                    canvasTemp.width = canvas.width / 2;
+                    canvasTemp.height = canvasTemp.width;
+                    canvasTemp.getContext('2d').drawImage(canvas, 0, 0, canvasTemp.width, canvasTemp.height);
+                    canvas = canvasTemp;
+                }
+                var canvasFinal = document.createElement('canvas');
+                canvasFinal.width = 128;
+                canvasFinal.height = 128;
+                canvasFinal.getContext('2d').drawImage(canvas, 0, 0, canvasFinal.width, canvasFinal.height);
+                imageHandler(canvasFinal.toDataURL('image/jpeg'));
+            } else {
+                var offset = (image.width - image.height) / 2;
+                canvas.getContext('2d').drawImage(this, offset, 0, image.height, image.height, 0, 0, canvas.width, canvas.height);
+            }
+        };
+        image.src = event.target.result;
+    }
+    reader.readAsDataURL(file);
+}
+$("#file-input").on("change", function () {
+    getDataString(this.files[0]);
+});
+
+function imageHandler(dataUri) {
+    $('#avatar').attr('src', dataUri);
+    dataString = dataUri;
+    $('#file-btn').removeAttr("disabled");
+}
+$('#file-btn').click(function () {
+    $.post("ajax/changeAvatar", { src: dataString }, avatarHandler);
+});
+function avatarHandler(response) {
+    alert(response);
+}
+$('#password-btn').click(function () {
+    $.post("ajax/changePassword", { src: dataString }, avatarHandler);
+});
+function avatarHandler(response) {
+    alert(response);
+}
+$('#email-btn').click(function () {
+    $.post("ajax/changeEmail", { src: dataString }, avatarHandler);
+});
+function avatarHandler(response) {
+    alert(response);
+}
+    </script>
 }
 
