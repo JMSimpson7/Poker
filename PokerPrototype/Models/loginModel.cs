@@ -6,6 +6,7 @@ using System.Web;
 using System.Data;
 using MySql.Data;
 using MySql.Data.MySqlClient;
+using System.Web.Helpers;
 
 namespace PokerPrototype.Models
 {
@@ -27,7 +28,7 @@ namespace PokerPrototype.Models
             {
                 usernameError = "Enter a username";
             }
-            else
+            else if (password.Length > 0)
             {
                 try
                 {
@@ -35,14 +36,14 @@ namespace PokerPrototype.Models
                     var cmd = new MySql.Data.MySqlClient.MySqlCommand();
                     Conn.Open();
                     cmd.Connection = Conn;
-                    cmd.CommandText = "SELECT id FROM users WHERE username = @user AND password = @pass";
+                    cmd.CommandText = "SELECT id, password FROM users WHERE username = @user";
                     cmd.Prepare();
                     cmd.Parameters.AddWithValue("@user", username);
-                    cmd.Parameters.AddWithValue("@pass", password);
                     MySqlDataReader rdr = cmd.ExecuteReader();
-                    if (rdr.Read())
+                    if (rdr.Read() && Crypto.VerifyHashedPassword(rdr[1].ToString(), password))
                     {
                         id = Convert.ToInt32(rdr[0]);
+
                     } else
                     {
                         passwordError = "Username and password didn't match";

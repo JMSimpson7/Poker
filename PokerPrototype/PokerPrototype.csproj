@@ -213,6 +213,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Hubs\MyHub.cs" />
+    <Compile Include="Models\PaymentModel.cs" />
     <Compile Include="Models\ProfileModel.cs" />
     <Compile Include="Models\LoginModel.cs" />
     <Compile Include="Models\RegisterModel.cs" />
@@ -266,7 +267,8 @@
     <Content Include="Views\Room\Index.cshtml" />
     <Content Include="Views\Shared\_ProfileDropdown.cshtml" />
     <Content Include="Views\Home\Profile.cshtml" />
-    <Content Include="Views\Shared\_AddFunds.cshtml" />
+    <Content Include="Views\Shared\_AddFund.cshtml" />
+    <Content Include="Views\Shared\_AddFundScript.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

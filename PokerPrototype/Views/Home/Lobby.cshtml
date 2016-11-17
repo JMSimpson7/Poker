@@ -41,13 +41,13 @@
 @section topright{
     @Html.Partial("_ProfileDropdown", Model)
 }
-@Html.Partial("_AddFunds")
+@Html.Partial("_AddFund")
 <h2>Lobby</h2>
 <p>You can log out at the top right</p>
 <button id="sendmessage">Send Message</button>
 
 @section scripts {
-
+    @Html.Partial("_AddFundScript")
     <script>
         $.post("ajax/lobby", ajaxHandler);
         function ajaxHandler(response) {

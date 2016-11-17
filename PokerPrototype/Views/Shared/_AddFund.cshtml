@@ -3,7 +3,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="RegisterLabel">Create an Account</h4>
+                <h4 class="modal-title" id="RegisterLabel">Add funds to your Account</h4>
             </div>
             <div class="modal-body">
                 <div class="form-group row" id="amount-group">
@@ -42,16 +42,16 @@
                         <span id="card-number-msg" class="help-block"></span>
                     </div>
                 </div>
-                <div class="form-group row" id="expire-group">
+                <div class="form-group row" id="expires-group">
                     <div class="col-sm-3">
-                        <label class="control-label" for="expire-input">Expires</label>
+                        <label class="control-label" for="expires-input">Expires</label>
                     </div>
                     <div class="col-sm-9">
-                        <input type="number" class="form-control" id="expire-input" />
+                        <input type="number" class="form-control" id="expires-input" />
                     </div>
                     <div class="col-sm-3"></div>
                     <div class="col-sm-9">
-                        <span id="expire-msg" class="help-block"></span>
+                        <span id="expires-msg" class="help-block"></span>
                     </div>
                 </div>
                 <div class="form-group row" id="cvc-group">
@@ -66,12 +66,24 @@
                         <span id="cvc-msg" class="help-block"></span>
                     </div>
                 </div>
+                <div class="form-group row" id="password-group">
+                    <div class="col-sm-3">
+                        <label class="control-label" for="password-input">Password</label>
+                    </div>
+                    <div class="col-sm-9">
+                        <input type="number" class="form-control" id="password-input" />
+                    </div>
+                    <div class="col-sm-3"></div>
+                    <div class="col-sm-9">
+                        <span id="password-msg" class="help-block"></span>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
                 <!-- Change These-->
                 <!--  <a class="btn btn-default" href="~/Register">Create Account</a>-->
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" id="currency-btn" class="btn btn-primary">Buy Currency</button>
+                <button type="button" id="fund-btn" class="btn btn-primary">Buy Currency</button>
             </div>
         </div>
     </div>

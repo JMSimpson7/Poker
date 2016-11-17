@@ -27,6 +27,16 @@ namespace PokerPrototype.Controllers
             }
             return Json(register, JsonRequestBehavior.AllowGet);
         }
+
+        public ActionResult Payment(string amount, string name, string cardNumber, string cvc, string expires, string password)
+        {
+            PaymentModel payment = new PaymentModel(Convert.ToInt32(Session["id"]), amount, name, cardNumber, cvc, expires, password);
+            if (payment.success)
+            {
+                
+            }
+            return Json(payment, JsonRequestBehavior.AllowGet);
+        }
         /*public ActionResult Currency(string email, string avatar)
         {
             EditProfile change = new EditProfile(email, avatar);

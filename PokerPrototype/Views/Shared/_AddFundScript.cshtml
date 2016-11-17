@@ -1,0 +1,70 @@
+﻿<script>
+    $("#fund-btn").click(submitPayment);
+    function submitPayment() {
+        $.post("/ajax/payment", {
+            amount: $('#amount-input').val(),
+            name: $('#name-input').val(),
+            cardNumber: $('#card-number-input').val(),
+            cvc: $('#cvc-input').val(),
+            expires: $('#expires-input').val(),
+            password: $('#password-input').val()
+        },
+        paymentHandler);
+    }
+
+    function paymentHandler(response) {
+        var success = true;
+        if (response.amountError.length > 0) {
+            success = false;
+            $("#amount-group").addClass("has-error");
+            $("#amount-msg").text(response.amountError);
+        } else {
+            $("#amount-group").removeClass("has-error");
+            $("#amount-msg").text("");
+        }
+        if (response.nameError.length > 0) {
+            success = false;
+            $("#name-group").addClass("has-error");
+            $("#name-msg").text(response.nameError);
+        } else {
+            $("#name-group").removeClass("has-error");
+            $("#name-msg").text("");
+        }
+        if (response.cardNumberError.length > 0) {
+            success = false;
+            $("#card-number-group").addClass("has-error");
+            $("#card-number-msg").text(response.cardNumberError);
+        } else {
+            $("#card-number-group").removeClass("has-error");
+            $("#card-number-msg").text("");
+        }
+        if (response.cvcError.length > 0) {
+            success = false;
+            $("#cvc-group").addClass("has-error");
+            $("#cvc-msg").text(response.cvcError);
+        } else {
+            $("#cvc-group").removeClass("has-error");
+            $("#cvc-msg").text("");
+        }
+        if (response.expiresError.length > 0) {
+            success = false;
+            $("#expires-group").addClass("has-error");
+            $("#expires-msg").text(response.expiresError);
+        } else {
+            $("#expires-group").removeClass("has-error");
+            $("#expires-msg").text("");
+        }
+        if (response.passwordError.length > 0) {
+            success = false;
+            $("#password-group").addClass("has-error");
+            $("#password-msg").text(response.passwordError);
+        } else {
+            $("#password-group").removeClass("has-error");
+            $("#password-msg").text("");
+        }
+        if (success) {
+            alert("funds successfully added!");
+            //window.location.href = '/';
+        }
+    }
+</script>
