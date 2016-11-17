@@ -66,6 +66,7 @@ namespace PokerPrototype.Models
                     cmd.Parameters.AddWithValue("@cvc", cvc);
                     success = cmd.ExecuteNonQuery() > 0;
                     amountError = cmd.LastInsertedId.ToString();
+                    Conn.Close();
                 }
                 catch (Exception ex)
                 {

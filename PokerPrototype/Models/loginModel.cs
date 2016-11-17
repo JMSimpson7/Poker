@@ -48,6 +48,7 @@ namespace PokerPrototype.Models
                     {
                         passwordError = "Username and password didn't match";
                     }
+                    Conn.Close();
                 }
                 catch (Exception ex)
                 {

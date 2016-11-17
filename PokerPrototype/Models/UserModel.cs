@@ -40,6 +40,7 @@ namespace PokerPrototype.Models
                     currency = 0;
                     avatar = "";
                 }
+                Conn.Close();
             } catch(Exception e)
             {
 

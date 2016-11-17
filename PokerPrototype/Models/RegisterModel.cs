@@ -70,6 +70,7 @@ namespace PokerPrototype.Controllers
                     cmd.Parameters.AddWithValue("@pass", Crypto.HashPassword(password));
                     cmd.Parameters.AddWithValue("@email", email);
                     success = cmd.ExecuteNonQuery() > 0;
+                    Conn.Close();
 
 
                     /*Shouldn't need this chunk but leaving it here just in case

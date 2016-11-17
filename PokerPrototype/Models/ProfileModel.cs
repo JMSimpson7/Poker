@@ -31,6 +31,7 @@ namespace PokerPrototype.Models
             cmd.Parameters.AddWithValue("@src", src);
             //MySqlDataReader rdr = cmd.ExecuteReader();
             cmd.ExecuteNonQuery();
+            Conn.Close();
         }
     }
 
@@ -87,6 +88,7 @@ namespace PokerPrototype.Models
                         cmd.Prepare();
                         cmd.Parameters.AddWithValue("@myawesomepassword", Crypto.HashPassword(newPassword));
                         cmd.ExecuteNonQuery();
+                        Conn.Close();
                     }
                     else
                     {
@@ -109,6 +111,7 @@ namespace PokerPrototype.Models
         public string passwordError { get; set; }
         public EmailModel(int id, string email, string password)
         {
+            success = true;
             passwordError = emailError = "";
             if (email.Length == 0)
             {
@@ -122,24 +125,37 @@ namespace PokerPrototype.Models
             }
             if (success == true)
             {
-                MySqlConnection Conn = new MySqlConnection("server=sql9.freemysqlhosting.net;database=sql9140372;user=sql9140372;password=WSx2C8iRZx;");
-                var cmd = new MySql.Data.MySqlClient.MySqlCommand();
-                Conn.Open();
-                cmd.Connection = Conn;
-                cmd.CommandText = "SELECT password FROM users WHERE id=" + id;
-                //cmd.Prepare();
-                //cmd.Parameters.AddWithValue("@src", src);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                if (rdr.Read() && Crypto.VerifyHashedPassword(rdr[0].ToString(), password))
+                try
                 {
-                    cmd.CommandText = "UPDATE users SET email=@newemail WHERE id=" + id;
-                    cmd.Prepare();
-                    cmd.Parameters.AddWithValue("@newemail", email);
-                    cmd.ExecuteNonQuery();
+                    MySqlConnection Conn = new MySqlConnection("server=sql9.freemysqlhosting.net;database=sql9140372;user=sql9140372;password=WSx2C8iRZx;");
+                    var cmd = new MySql.Data.MySqlClient.MySqlCommand();
+                    Conn.Close();
+                    Conn.Open();
+                    cmd.Connection = Conn;
+                    cmd.CommandText = "SELECT password FROM users WHERE id=" + id;
+                    //cmd.Prepare();
+                    //cmd.Parameters.AddWithValue("@src", src);
+                    MySqlDataReader rdr = cmd.ExecuteReader();
+                    if (rdr.Read() && Crypto.VerifyHashedPassword(rdr[0].ToString(), password))
+                    {
+                        cmd = new MySql.Data.MySqlClient.MySqlCommand();
+                        Conn.Close();
+                        Conn.Open();
+                        cmd.Connection = Conn;
+                        cmd.CommandText = "UPDATE users SET email=@newemail WHERE id=" + id;
+                        cmd.Prepare();
+                        cmd.Parameters.AddWithValue("@newemail", email);
+                        cmd.ExecuteNonQuery();
+                        Conn.Close();
+                    }
+                    else
+                    {
+                        passwordError = "Your password is incorrect";
+                    }
                 }
-                else
+                catch(Exception e)
                 {
-                    passwordError = "Your password is incorrect";
+                    passwordError = e.Message;
                 }
             }
         }   
