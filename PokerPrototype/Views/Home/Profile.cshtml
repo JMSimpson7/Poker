@@ -124,71 +124,113 @@
 @section scripts{
     @Html.Partial("_AddFundScript")
 <script>
-    var dataString = "";
-function getDataString(file) {
-    var file = document.querySelector('input[type=file]').files[0];
-    var reader = new FileReader();
-    reader.onload = function (event) {
-        var image = new Image();
-        image.onload = function () {
-            var canvas = document.createElement('canvas');
-            canvas.width = 128;
-            canvas.height = 128;
-            if (image.height > image.width) {
-                var offset = (image.height - image.width) / 2;
-
-                canvas.width = image.width;
-                canvas.height = image.width;
-                canvas.getContext('2d').drawImage(this, 0, offset, image.width, image.width, 0, 0, image.width, image.width);
-
-                while (canvas.width > 320) {
-                    var canvasTemp = document.createElement('canvas');
-                    canvasTemp.width = canvas.width / 2;
-                    canvasTemp.height = canvasTemp.width;
-                    canvasTemp.getContext('2d').drawImage(canvas, 0, 0, canvasTemp.width, canvasTemp.height);
-                    canvas = canvasTemp;
-                }
-                var canvasFinal = document.createElement('canvas');
-                canvasFinal.width = 128;
-                canvasFinal.height = 128;
-                canvasFinal.getContext('2d').drawImage(canvas, 0, 0, canvasFinal.width, canvasFinal.height);
-                imageHandler(canvasFinal.toDataURL('image/jpeg'));
-            } else {
-                var offset = (image.width - image.height) / 2;
-                canvas.getContext('2d').drawImage(this, offset, 0, image.height, image.height, 0, 0, canvas.width, canvas.height);
+    $(document).ready(function () {;
+        var dataString = "";
+        function getDataString(file) {
+            var file = document.querySelector('input[type=file]').files[0];
+            var reader = new FileReader();
+            reader.onload = function (event) {
+                var image = new Image();
+                image.onload = function () {
+                    var canvas = document.createElement('canvas');
+                    canvas.width = 128;
+                    canvas.height = 128;
+                    if (image.height > image.width) {
+                        var offset = (image.height - image.width) / 2;
+                        
+                        canvas.width = image.width;
+                        canvas.height = image.width;
+                        canvas.getContext('2d').drawImage(this, 0, offset, image.width, image.width, 0, 0, image.width, image.width);
+                            
+                        while (canvas.width > 320) {
+                            var canvasTemp = document.createElement('canvas');
+                            canvasTemp.width = canvas.width / 2;
+                            canvasTemp.height = canvasTemp.width;
+                            canvasTemp.getContext('2d').drawImage(canvas, 0, 0, canvasTemp.width, canvasTemp.height);
+                            canvas = canvasTemp;
+                        }
+                        var canvasFinal = document.createElement('canvas');
+                        canvasFinal.width = 128;
+                        canvasFinal.height = 128;
+                        canvasFinal.getContext('2d').drawImage(canvas, 0, 0, canvasFinal.width, canvasFinal.height);
+                        imageHandler(canvasFinal.toDataURL('image/jpeg'));
+                    } else {
+                        var offset = (image.width - image.height) / 2;
+                        canvas.getContext('2d').drawImage(this, offset, 0, image.height, image.height, 0, 0, canvas.width, canvas.height);
+                    }
+                };
+                image.src = event.target.result;
             }
-        };
-        image.src = event.target.result;
-    }
-    reader.readAsDataURL(file);
-}
-$("#file-input").on("change", function () {
-    getDataString(this.files[0]);
-});
+            reader.readAsDataURL(file);
+        }
+        $("#file-input").on("change", function () {
+            getDataString(this.files[0]);
+        });
 
-function imageHandler(dataUri) {
-    $('#avatar').attr('src', dataUri);
-    dataString = dataUri;
-    $('#file-btn').removeAttr("disabled");
-}
-$('#file-btn').click(function () {
-    $.post("ajax/changeAvatar", { src: dataString }, avatarHandler);
-});
-function avatarHandler(response) {
-    alert(response);
-}
-$('#password-btn').click(function () {
-    $.post("ajax/changePassword", { src: dataString }, avatarHandler);
-});
-function avatarHandler(response) {
-    alert(response);
-}
-$('#email-btn').click(function () {
-    $.post("ajax/changeEmail", { src: dataString }, avatarHandler);
-});
-function avatarHandler(response) {
-    alert(response);
-}
+        function imageHandler(dataUri) {
+            $('#avatar').attr('src', dataUri);
+            dataString = dataUri;
+            $('#file-btn').removeAttr("disabled");
+        }
+        $('#file-btn').click(function () {
+            $.post("/ajax/changeAvatar", { src: dataString }, avatarHandler);
+        });
+        function avatarHandler(response) {
+            alert(response);
+        }
+        $('#password-btn').click(function () {
+            $.post("/ajax/changePassword", {
+                oldPassword: $('#old-password-input').val(),
+                newPassword: $('#new-password-input').val(),
+                Confirm: $('#confirm-password-input').val()
+            }, passwordHandler);
+        });
+        function passwordHandler(response) {
+            if (response.passwordError.length > 0) {
+                $("#old-password-group").addClass("has-error");
+                $("#old-password-msg").text(response.passwordError);
+            } else {
+                $("#old-password-group").removeClass("has-error");
+                $("#old-password-msg").text("");
+            }
+            if (response.newpasswordError.length > 0) {
+                $("#new-password-group").addClass("has-error");
+                $("#new-password-msg").text(response.newpasswordError);
+            } else {
+                $("#new-password-group").removeClass("has-error");
+                $("#new-password-msg").text("");
+            }
+            if (response.confirmError.length > 0) {
+                $("#confirm-password-group").addClass("has-error");
+                $("#confirm-password-msg").text(response.confirmError);
+            } else {
+                $("#confirm-password-group").removeClass("has-error");
+                $("#confirm-password-msg").text("");
+            }
+        }
+        $('#email-btn').click(function () {
+            $.post("/ajax/changeEmail", { 
+                email: $('#email-input').val(),
+                password: $('#email-password-input').val()
+                }, emailHandler);
+        });
+        function emailHandler(response) {
+            if (response.emailError.length > 0) {
+                $("#email-group").addClass("has-error");
+                $("#email-msg").text(response.emailError);
+            } else {
+                $("#email-group").removeClass("has-error");
+                $("#email-msg").text("");
+            }
+            if (response.passwordError.length > 0) {
+                $("#email-password-group").addClass("has-error");
+                $("#email-password-msg").text(response.passwordError);
+            } else {
+                $("#email-password-group").removeClass("has-error");
+                $("#email-password-msg").text("");
+            }
+        }
+    }); //end document ready
     </script>
 }
 

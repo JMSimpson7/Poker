@@ -37,16 +37,26 @@ namespace PokerPrototype.Controllers
             }
             return Json(payment, JsonRequestBehavior.AllowGet);
         }
-        /*public ActionResult Currency(string email, string avatar)
+        public ActionResult changeAvatar(string src)
         {
-            EditProfile change = new EditProfile(email, avatar);
-            if (change.success > 0)
-                
+            AvatarModel avatar = new AvatarModel(Convert.ToInt32(Session["id"]), src);
 
-            return Json(change, JsonRequestBehavior.AllowGet);
-        }*/
+            return Json(avatar, JsonRequestBehavior.AllowGet);
+        }
 
+        public ActionResult changePassword(string oldPassword, string newPassword, string Confirm)
+        {
+            PasswordModel password = new PasswordModel(Convert.ToInt32(Session["id"]), oldPassword, newPassword, Confirm);
 
+            return Json(password, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult changeEmail(string email, string password)
+        {
+            EmailModel model = new EmailModel(Convert.ToInt32(Session["id"]), email, password);
+
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
         // GET: Ajax
         public ActionResult Lobby()
         {
