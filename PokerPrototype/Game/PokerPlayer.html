@@ -1,41 +1,62 @@
 <!DOCTYPE html>
-<body>
-	<div class="player">
-		<div class="playerCards">
-			<div class="card1"></div>
-			<div class="card2"></div>
-		</div>
-		<div class="Player Info">
-			<div class="avatar">
-				<img src=""/>
+	<head>
+    	<link rel="stylesheet" href="styles.css">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	</head>
+	<body>
+		<div class="player">
+			<div class="playerCards">
+				<div class="card1"></div>
+				<div class="card2"></div>
 			</div>
-			<div class="displays">
-				<div class="username"></div>
-				<div class="currency"></div>
+			<div class="Player Info">
+				<div class="avatar">
+					<img src=""/>
+				</div>
+				<div class="displays">
+					<div class="username"></div>
+					<div class="currency"></div>
+				</div>
+				<div class="timer"></div>
 			</div>
-			<div class="timer"></div>
 		</div>
-	</div>
-	<div class="bottom functions">
-		<div class="meta actions">
-			<button>Buy More</button>
+		<div id="bottomFunctions">
+			<div id="metaActions">
+				<button class="metaButton">Buy More</button>
+					<br>
+				<button class="metaButton">Hand History</button>
+					<br>
+				<button class="metaButton">Leave game</button>
+			</div>
+			<div id="gameActions">
+				<div id="actionButtons">
+					<button class="actionButton">Fold</button>
+					<button class="actionButton">Call</button>
+					<button class="actionButton">All In</button>
+					<button class="actionButton">Raise</button>
+				</div>
 				<br>
-			<button>Leave game</button>
-				<br>
-			<button>Hand History</button>
+				<div id="rangeSlider">
+					<input id="raiseSlider" type="range"  min="0" max="100" value="0" onchange= "updateTextInput(this.value);">
+					<input id="raiseInput" type="text"  value= "0">
+				</div>
+			</div>
+			<div id="chatroom">
+				<div class="messages"></div>
+				<input type="text" name="typeMessge">
+			</div>
 		</div>
-		<div class="gameActions">
-			<button>Fold</button>
-			<button>Call</button>
-			<button>All In</button>
-			<br>
-			<button>Raise{{val}}</button>
-			<input type="text" name="betAmount">
-		</div>
-		<div class="chatroom">
-			<div class="messages"></div>
-			<input type="text" name="typeMessge">
-		</div>
-	</div>
-</body>
+		<script src="https://unpkg.com/vue/dist/vue.js"></script>
+		<script>
+			$('body').css('min-height', '100%');
+		</script>
+		<script>
+			function updateTextInput(val) {
+         		document.getElementById('raiseInput').value=val; 
+        	}
+        	function getSliderValue(){
+        		document.getElementById('raiseInput').value=document.getElementById('raiseSlider').value;
+        	}
+		</script>
+	</body>
 </html>
