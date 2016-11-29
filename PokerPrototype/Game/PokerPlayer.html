@@ -4,7 +4,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 	</head>
 	<body>
-		<div class="player">
+		<div id="player">
 			<div class="playerCards">
 				<div class="card1"></div>
 				<div class="card2"></div>
@@ -37,8 +37,8 @@
 				</div>
 				<br>
 				<div id="rangeSlider">
-					<input id="raiseSlider" type="range"  min="0" max="100" value="0" onchange= "updateTextInput(this.value);">
-					<input id="raiseInput" type="text"  value= "0">
+					<input id="raiseSlider" type="range"  min="0" max="100" value="0" event= "updateTextInput(this.value);">
+					<input id="raiseInput" type="text"  value= "0" event="updateSlider(this.value);">
 				</div>
 			</div>
 			<div id="chatroom">
@@ -54,8 +54,8 @@
 			function updateTextInput(val) {
          		document.getElementById('raiseInput').value=val; 
         	}
-        	function getSliderValue(){
-        		document.getElementById('raiseInput').value=document.getElementById('raiseSlider').value;
+        	function updateSlider(val){
+        		document.getElementById('raiseSlider').value=val;
         	}
 		</script>
 	</body>
