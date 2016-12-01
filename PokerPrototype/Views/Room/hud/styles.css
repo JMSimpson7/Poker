@@ -1,0 +1,93 @@
+body {
+	    margin: 0;
+            padding: 0;
+            position: absolute;
+            background-image:  url(http://www.walldevil.com/wallpapers/a52/wallpaper-textur-background-patterns-backgrounds-wallpapers.jpg);
+	        -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-size: cover
+}
+
+#hud {
+	position: fixed;
+	height: 100px;
+	width: 300px;
+	bottom: 25%;
+	left: 50%;
+	transform: translate(-50%, 0%);
+}
+
+.playerCards {
+	display: flex;
+	justify-content: center;
+}
+
+.card {
+	height: 85px;
+	width: 30%;
+	/*background-color: white;*/
+	/*border: 1px groove;*/
+	border-radius: 2px;
+}
+
+.card img {
+	height: 100%;
+	width: 100%;
+}
+
+.playerBar {
+	display: flex;
+	justify-content: center;
+}
+
+.playerBar > div {
+	background-color: #585749;
+}
+
+.avatar {
+	height: 60px;
+	width: 20%;
+	border-radius: 2px;
+	border: 1px inset;
+
+}
+
+.avatar img {
+	height: 100%;
+	width: 100%;
+}
+
+.nameAndCurrency {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	height: 60px;
+	width: 60%;
+	border: 1px inset;
+	border-radius: 2px;
+}
+
+.name {
+	display: block;
+	width: 60%;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	text-align: center;
+	background-color: #E59866;
+}
+
+.currency {
+	display: block;
+	width: 60%;
+	margin-bottom: 5px;
+	text-align: center;
+	background-color: #97ddff;
+}
+
+.timer {
+	height: 60px;
+	width: 20%;
+	border: 1px inset;
+	border-radius: 2px;
+}
