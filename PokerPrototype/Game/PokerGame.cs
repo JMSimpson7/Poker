@@ -1,4 +1,10 @@
-﻿using System;
+﻿/*
+ * TODO:
+ * -Rework functions relying on draw returning bool instead of a string
+ * 
+ * */
+
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using HoldemHand;
@@ -127,7 +133,7 @@ namespace PokerGame
 
         }
         //draw continually from index 0, which is the top of the deck
-        public bool draw()
+        public string draw()
         {
             //make sure deck actually has a card to draw
             if (deckCards.Count > 0)
@@ -138,11 +144,13 @@ namespace PokerGame
                 deckCards.RemoveAt(0);
                 //add to lsit of cards in game
                 gameCards.Add(drawn);
+                /*
                 Console.WriteLine("Drawn: ");
                 drawn.printCard();
-                return true;
+                */
+                return drawn.value;
             }
-            return false;
+            return "";
         }
         //takes all cards in play, readds them to deck, then reshuffles
         public void cleanup()
@@ -229,9 +237,13 @@ namespace PokerGame
         public int currency { get; set; }
         public string name;
         public string hand { get; set; }
+        //whether or not Player is in the current game (They have not folded)
+        public bool inPlay { get; set; }
     }
 
-    //manages game logic
+    //Responsible for: All game logic, processing all player actions
+    //(call, raise, fold, etc), update clients when state changes (player acts)
+    //draw/deal cards, inform players of turn, determine winner
     public class GameManager
     {
         //Attributes-------------------------------------------------------------------
@@ -259,6 +271,37 @@ namespace PokerGame
             activePlayers = new List<Player> { };
             inactivePlayers = new List<Player> { };
             deck = new Deck();
+        }
+        
+        //intializes beginning state of game
+        public void init()
+        {
+            deck.shuffle();
+            //Cycle through player list twice to deal cards to players, done to aid potential graphics integration
+            for(int i=0; i< activePlayers.Count;i++)
+            {
+                activePlayers[i].hand = deck.draw();
+                //set all active players as currently participating in round
+                activePlayers[i].inPlay = true;
+            }
+            for(int i=0; i< activePlayers.Count;i++)
+            {
+                //append " " and second card to each players hand
+                activePlayers[i].hand += " " + deck.draw();
+            }
+        }
+
+        //actually runs game
+        public void run()
+        {
+            //pre init() we need to query players for small blind then big blind
+            //betSBlind()
+            //betLBlind()
+            this.init();
+            //game begins, player 1 is first to act
+            //while there are still more than 1 players
+            while(active)
+            
         }
 
 
