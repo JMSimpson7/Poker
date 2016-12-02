@@ -242,13 +242,17 @@ namespace PokerGame
     }
 
     //Responsible for: All game logic, processing all player actions
-    //(call, raise, fold, etc), update clients when state changes (player acts)
-    //draw/deal cards, inform players of turn, determine winner
+    //(call, raise, fold, check)
+    //draw/deal cards,determine winner
+    //SignalR Hub handles updating clients/maintaining turn order
     public class GameManager
     {
+        //TODO: ADD tributes
+     
         //Attributes-------------------------------------------------------------------
         //maximum size of room, default to nine;
         int roomCap;
+        int callAmt;
         //total amount in pot, init to zero
         int pot;
         //string representation of board. Included for internal hand evaluator.
@@ -261,10 +265,18 @@ namespace PokerGame
         List<Player> inactivePlayers;
         Deck deck;
         //Functions--------------------------------------------------------------------
+        //TODO: Add-in raise(), call(), check(), fold(), blind(char p, ), getWinner(), addBoard();
+        //getwinner(){ 
+        // list of winners, usually only contains
+        // loop through the active players
+        // Hand h1 = new Hand("ad kd", board);
+        /// evaluate hand for all players and find maximum
+        // in the event of a tie, push onto the winners list
         //include parameter default overrides ("int size=9") later
         public GameManager()
         {
-            roomCap = 9;
+            roomCap = 6;
+            callAmt = 0;
             pot = 0;
             board = "";
             boardCards = new List<Card> { };
