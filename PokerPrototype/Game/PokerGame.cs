@@ -96,7 +96,7 @@ namespace PokerGame
             cards[32].value = "10s";
             cards[33].value = "10h";
             cards[34].value = "10d";
-            cards[35].value = "10c";
+            cards[35].value = "10c"; 
             cards[36].value = "js";
             cards[37].value = "jh";
             cards[38].value = "jd";
