@@ -424,9 +424,76 @@ namespace PokerGame
             }
             return winners;
         }
-        
-
-
+        public void award(List<string> winners)
+        {
+            //divide pot among all winners
+            int award=pot/(winners.Count);
+            for(int i=0; i< activePlayers.Count;i++)
+            {
+                for(int x=0; x< winners.Count;i++)
+                {
+                    if(activePlayers[i].ID.Equals(winners[i]))
+                    {
+                        activePlayers[i].currency+= award;   
+                    }
+                }
+            }
+            //pot is now empty
+            pot=0;
+        }
+        //player joins midgame. Handles adjusting data, NOT actual network join
+        public void join(string IDtag, int money, string username)
+        {
+                Player temp = new Player();
+                temp.ID=IDtag;
+                temp.currency=money;
+                temp.name=username;
+                //add to inactive players, to become active next round
+                inactivePlayers.Add(temp);
+        }
+//GET functions for integration with web interface
+        public string getBoard()
+        {
+            return board;
+        }    
+        public int getBoardSize()
+        {
+            return boardCount;
+        }
+        public int getPlayerCurrency(string ID)
+        {
+            for (int i = 0; i < activePlayers.Count; i++)
+            {
+                if (activePlayers[i].ID.Equals(ID))
+                {
+                    return activePlayers[i].currency;
+                }
+            }
+        }
+        public string getPlayerHand(string ID)
+        {
+            for (int i = 0; i < activePlayers.Count; i++)
+            {
+                if (activePlayers[i].ID.Equals(ID))
+                {
+                    return activePlayers[i].hand;
+                }
+            }
+        }
+        public bool getFold(string ID)
+        {
+            for (int i = 0; i < activePlayers.Count; i++)
+            {
+                if (activePlayers[i].ID.Equals(ID))
+                {
+                    return activePlayers[i].folded;
+                }
+            }
+        }            
+        public int getPot()
+        {
+            return pot; 
+        }
     }
     class Program
     {
