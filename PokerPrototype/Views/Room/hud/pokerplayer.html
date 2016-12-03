@@ -5,22 +5,126 @@
 	<link rel="stylesheet" href="styles.css">
 </head>
 <body>
-	<div id="hud" class="playerHud">
+
+	<!-- COMMUNITY CARDS -->
+	<div id="community">
+			<div id="flop1" class="communityCard"><img v-bind:src="flop1Url"/></div>
+			<div id="flop2" class="communityCard"><img v-bind:src="flop2Url"/></div>
+			<div id="flop3" class="communityCard"><img v-bind:src="flop3Url"/></div>
+			<div id="turn"  class="communityCard"><img v-bind:src="turnUrl"/></div>
+			<div id="river" class="communityCard"><img v-bind:src="riverUrl"/></div>
+			<div id="pot">Pot Size: ${{potSize}}</div> 		
+	</div>
+
+	<!-- HUD 1 -->
+	<div id="hud1" class="playerHud">
 		
 		<div class="playerCards">
-			<div id="card1" class="card"><img v-bind:src="card1Url"/></div>
-			<div id="card2" class="card"><img v-bind:src="card2Url"/></div> 
+			<div id="card1" class="playerCard"><img v-bind:src="card1Url"/></div>
+			<div id="card2" class="playerCard"><img v-bind:src="card2Url"/></div> 
+		</div>
+
+		<div class="playerBar">
+			<a href="#" class="avatar"><img v-bind:src="avatarUrl" /></a>
+			<div class="nameAndCurrency">
+			 	<div class="name">{{username}}</div>
+				<div class="currency">currency:${{currency}}</div>
+			</div> 
+			<div class="timer">{{timer}}</div>
+		</div> 
+	</div>
+
+	<!-- HUD 2 -->
+	<div id="hud2" class="playerHud">
+		
+		<div class="playerCards">
+			<div id="card1" class="playerCard"><img v-bind:src="card1Url"/></div>
+			<div id="card2" class="playerCard"><img v-bind:src="card2Url"/></div> 
 		</div>
 	
-	<div class="playerBar">
-		<div class="avatar"><img v-bind:src="avatarUrl" /></div>
-		<div class="nameAndCurrency">
-			 <div class="name">{{username}}</div>
-
-			 <div class="currency">currency:${{currency}}</div>
+		<div class="playerBar">
+			<a href="#" class="avatar"><img v-bind:src="avatarUrl" /></a>
+			<div class="nameAndCurrency">
+			 	<div class="name">{{username}}</div>
+				<div class="currency">currency:${{currency}}</div>
+			</div> 
+			<div class="timer">{{timer}}</div>
 		</div> 
-		<div class="timer">{{timer}}</div>
-	</div> 
+	</div>
+
+	<!-- HUD 3 -->
+	<div id="hud3" class="playerHud">
+		
+		<div class="playerCards">
+			<div id="card1" class="playerCard"><img v-bind:src="card1Url"/></div>
+			<div id="card2" class="playerCard"><img v-bind:src="card2Url"/></div> 
+		</div>
+	
+		<div class="playerBar">
+			<a href="#" class="avatar"><img v-bind:src="avatarUrl" /></a>
+			<div class="nameAndCurrency">
+			 	<div class="name">{{username}}</div>
+				<div class="currency">currency:${{currency}}</div>
+			</div> 
+			<div class="timer">{{timer}}</div>
+		</div> 
+	</div>
+
+	<!-- HUD 4 -->
+	<div id="hud4" class="playerHud">
+		
+		<div class="playerCards">
+			<div id="card1" class="playerCard"><img v-bind:src="card1Url"/></div>
+			<div id="card2" class="playerCard"><img v-bind:src="card2Url"/></div> 
+		</div>
+	
+		<div class="playerBar">
+			<a href="#" class="avatar"><img v-bind:src="avatarUrl" /></a>
+			<div class="nameAndCurrency">
+			 	<div class="name">{{username}}</div>
+				<div class="currency">currency:${{currency}}</div>
+			</div> 
+			<div class="timer">{{timer}}</div>
+		</div> 
+	</div>
+
+	<!-- HUD 5 -->
+	<div id="hud5" class="playerHud">
+		
+		<div class="playerCards">
+			<div id="card1" class="playerCard"><img v-bind:src="card1Url"/></div>
+			<div id="card2" class="playerCard"><img v-bind:src="card2Url"/></div> 
+		</div>
+	
+		<div class="playerBar">
+			<a href="#" class="avatar"><img v-bind:src="avatarUrl" /></a>
+			<div class="nameAndCurrency">
+			 	<div class="name">{{username}}</div>
+				<div class="currency">currency:${{currency}}</div>
+			</div> 
+			<div class="timer">{{timer}}</div>
+		</div> 
+	</div>
+
+	<!-- HUD 6 -->
+	<div id="hud6" class="playerHud">
+		
+		<div class="playerCards">
+			<div id="card1" class="playerCard"><img v-bind:src="card1Url"/></div>
+			<div id="card2" class="playerCard"><img v-bind:src="card2Url"/></div> 
+		</div>
+	
+		<div class="playerBar">
+			<a href="#" class="avatar"><img v-bind:src="avatarUrl" /></a>
+			<div class="nameAndCurrency">
+			 	<div class="name">{{username}}</div>
+				<div class="currency">currency:${{currency}}</div>
+			</div> 
+			<div class="timer">{{timer}}</div>
+		</div> 
+	</div>
+
+
 	<script src="https://unpkg.com/vue@2.1.3/dist/vue.js"></script>
 	<script src="app.js"></script>
 </body>

@@ -1095,6 +1095,6 @@ C:\Users\Tim\Documents\gitRepos\gamefork\Poker\PokerPrototype\bin\Microsoft.Owin
 C:\Users\Tim\Documents\gitRepos\gamefork\Poker\PokerPrototype\bin\Microsoft.Owin.Security.Google.xml
 C:\Users\Tim\Documents\gitRepos\gamefork\Poker\PokerPrototype\bin\Microsoft.Owin.Security.Twitter.xml
 C:\Users\Tim\Documents\gitRepos\gamefork\Poker\PokerPrototype\bin\Microsoft.Owin.Security.MicrosoftAccount.xml
-C:\Users\Tim\Documents\gitRepos\gamefork\Poker\PokerPrototype\obj\Debug\PokerPrototype.csprojResolveAssemblyReference.cache
 C:\Users\Tim\Documents\gitRepos\gamefork\Poker\PokerPrototype\obj\Debug\PokerPrototype.dll
 C:\Users\Tim\Documents\gitRepos\gamefork\Poker\PokerPrototype\obj\Debug\PokerPrototype.pdb
+C:\Users\Tim\Documents\gitRepos\gamefork\Poker\PokerPrototype\obj\Debug\PokerPrototype.csprojResolveAssemblyReference.cache
