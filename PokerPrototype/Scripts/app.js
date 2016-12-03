@@ -39,7 +39,8 @@ var hud1 = new Vue({
 						var clock = setInterval(countdown, 1000);
 						function countdown (){
 							that.timer--; 
-							if(that.timer == 0){
+							if (that.timer == 0) {
+							    that.timeout = true;
 								clearInterval(clock);
 							}
 						}
@@ -70,7 +71,8 @@ var hud2 = new Vue({
 						function countdown (){
 							
 							that.timer--;
-							if(that.timer == 0){
+							if (that.timer == 0) {
+							    that.timeout = true;
 								clearInterval(clock);
 							}
 						}
@@ -100,7 +102,8 @@ var hud3 = new Vue({
 						var clock = setInterval(countdown, 1000);
 						function countdown (){
 							that.timer--; 
-							if(that.timer == 0){
+							if (that.timer == 0) {
+							    that.timeout = true;
 								clearInterval(clock);
 							}
 						}
@@ -129,8 +132,10 @@ var hud4 = new Vue({
 						var clock = setInterval(countdown, 1000);
 						function countdown (){
 							that.timer--; 
-							if(that.timer == 0){
-								clearInterval(clock);
+							if(that.timer == 0) {
+							    that.timeout = true;
+							    clearInterval(clock);
+							    
 							}
 						}
 		}
@@ -158,7 +163,8 @@ var hud5 = new Vue({
 						var clock = setInterval(countdown, 1000);
 						function countdown (){
 							that.timer--; 
-							if(that.timer == 0){
+							if (that.timer == 0) {
+							    that.timeout = true;
 								clearInterval(clock);
 							}
 						}
@@ -187,7 +193,8 @@ var hud6 = new Vue({
 						var clock = setInterval(countdown, 1000);
 						function countdown (){
 							that.timer--; 
-							if(that.timer == 0){
+							if (that.timer == 0) {
+							    that.timeout = true;
 								clearInterval(clock);
 							}
 						}
