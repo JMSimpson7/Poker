@@ -1,7 +1,7 @@
 ﻿/*
  * TODO:
  * -Rework functions relying on draw returning bool instead of a string
- * 
+ * -Determine what happens in betting if player does not have money to call/raise
  * */
 
 using System;
@@ -96,7 +96,7 @@ namespace PokerGame
             cards[32].value = "10s";
             cards[33].value = "10h";
             cards[34].value = "10d";
-            cards[35].value = "10c"; 
+            cards[35].value = "10c";
             cards[36].value = "js";
             cards[37].value = "jh";
             cards[38].value = "jd";
@@ -235,10 +235,11 @@ namespace PokerGame
     public class Player
     {
         public int currency { get; set; }
-        public string name;
+        public string ID { get; set; }
+        public string name { get; set; }
         public string hand { get; set; }
         //whether or not Player is in the current game (They have not folded)
-        public bool inPlay { get; set; }
+        public bool folded{ get; set; }
     }
 
     //Responsible for: All game logic, processing all player actions
@@ -247,54 +248,68 @@ namespace PokerGame
     //SignalR Hub handles updating clients/maintaining turn order
     public class GameManager
     {
-        //TODO: ADD tributes
-     
         //Attributes-------------------------------------------------------------------
         //maximum size of room, default to nine;
         int roomCap;
+        //last bet number. calls must meet this, raises must beat it
         int callAmt;
         //total amount in pot, init to zero
         int pot;
+        //potential check against too many cards on board
+        int boardCount;
         //string representation of board. Included for internal hand evaluator.
         string board;
         //list representation of cards currently in the board. Included in case needed for graphical representation
         List<Card> boardCards;
-        //list of active players        
+        //list of active players currently in game        
         List<Player> activePlayers;
-        //list of inactive players. Included for potential integration issues with SignalR
+        //list of inactive players not in the game. Included for potential integration issues with SignalR
         List<Player> inactivePlayers;
         Deck deck;
-        //Functions--------------------------------------------------------------------
-        //TODO: Add-in raise(), call(), check(), fold(), blind(char p, ), getWinner(), addBoard();
-        //getwinner(){ 
-        // list of winners, usually only contains
-        // loop through the active players
-        // Hand h1 = new Hand("ad kd", board);
-        /// evaluate hand for all players and find maximum
-        // in the event of a tie, push onto the winners list
+
         //include parameter default overrides ("int size=9") later
         public GameManager()
         {
             roomCap = 6;
-            callAmt = 0;
             pot = 0;
+            boardCount = 0;
             board = "";
             boardCards = new List<Card> { };
             activePlayers = new List<Player> { };
             inactivePlayers = new List<Player> { };
             deck = new Deck();
         }
-        
+        //Functions--------------------------------------------------------------------
+        //TODO: \\ check(), blind(char p, );
+        //getwinner(){ 
+        // list of winners, usually only contains
+        // loop through the active players
+        // Hand h1 = new Hand("ad kd", board);
+        /// evaluate hand for all players and find maximum
+        // in the event of a tie, push onto the winners list
         //intializes beginning state of game
         public void init()
         {
+            //all inactivePlayers become activePlayers here
+            for (int i = 0; i < inactivePlayers.Count; i++)
+            {
+                activePlayers.Add(inactivePlayers[i]);
+            }
+            inactivePlayers.Clear();
+            //clean and shuffle deck
+            deck.cleanup();
             deck.shuffle();
+            //reset board count to zero
+            boardCount = 0;
+            //empty board
+            board = "";
             //Cycle through player list twice to deal cards to players, done to aid potential graphics integration
             for(int i=0; i< activePlayers.Count;i++)
             {
+                //Overwrite will empty previous player hand
                 activePlayers[i].hand = deck.draw();
                 //set all active players as currently participating in round
-                activePlayers[i].inPlay = true;
+                activePlayers[i].folded = false;
             }
             for(int i=0; i< activePlayers.Count;i++)
             {
@@ -303,18 +318,113 @@ namespace PokerGame
             }
         }
 
-        //actually runs game
-        public void run()
+        //adds card to board
+        public void addBoard()
         {
-            //pre init() we need to query players for small blind then big blind
-            //betSBlind()
-            //betLBlind()
-            this.init();
-            //game begins, player 1 is first to act
-            //while there are still more than 1 players
-            while(active)
-            
+            //if board is empty
+            if(board.Equals(""))
+            {
+                board = deck.draw();
+                boardCount = 1;
+            }
+            else
+            {
+                //if room to add to board, add
+                if(boardCount<5)
+                {
+                    board += " " + deck.draw();
+                    boardCount++;
+                }
+            }
         }
+
+        //marks player as folded.
+        public void fold(string ID)
+        {
+            for (int i = 0; i < activePlayers.Count; i++)
+            {
+                if(activePlayers[i].ID.Equals(ID))
+                {
+                    activePlayers[i].folded = true;
+                }
+            }
+        }
+        //validates and checks raising
+        public void raise(string ID, int amount)
+        {
+            for (int i = 0; i < activePlayers.Count; i++)
+            {
+                if (activePlayers[i].ID.Equals(ID))
+                {
+                    //amount must be greater than current call amt, and player must actually have the money
+                    if ((amount > callAmt) &&(activePlayers[i].currency-amount>=0))
+                    {
+                        activePlayers[i].currency -= amount;
+                        pot += amount;
+                        callAmt = amount;
+                    }
+                }
+            }
+        }
+        //validates and checks calling
+        public void call(string ID)
+        {
+            for (int i = 0; i < activePlayers.Count; i++)
+            {
+                if (activePlayers[i].ID.Equals(ID))
+                {
+                    if (activePlayers[i].currency - callAmt >= 0)
+                    {
+                        activePlayers[i].currency -= callAmt;
+                        pot += callAmt;
+                    }
+                }
+            }
+        }
+        //returns list of ID of winning player(s), delinated by space if more than one winner
+        public List<string> getWinner()
+        {
+            List<string> winners = new List<string> { };
+            //copy all non folded players into new list of potential winners
+            List<Player> finalPlayers = new List<Player> { };
+            for(int i=0; i< activePlayers.Count;i++)
+            {
+                if(activePlayers[i].folded==false)
+                {
+                    finalPlayers.Add(activePlayers[i]);
+                }
+            }
+            //start by examining first hand
+            Hand h1 = new Hand(finalPlayers[0].hand, board);
+            //default to first hand being winner (a hand better than no hand)
+            winners.Add(finalPlayers[0].ID);
+            //comparison hand
+            Hand h2;
+            for(int i=1; i< finalPlayers.Count;i++)
+            {
+                //for every other active player examine hand, compare, replace if necessary
+                h2 = new Hand(finalPlayers[i].hand, board);
+
+                //new hand is better
+                if (h2 > h1)
+                {
+                    winners.Clear();
+                    winners.Add(finalPlayers[0].ID);
+                    h1 = h2;
+                }
+                else if(h1>h2)
+                {
+                    //do nothing
+                }
+                else
+                {
+                    //tie, push onto winners list
+                    winners.Add(finalPlayers[0].ID);
+                }
+            }
+            return winners;
+        }
+        
 
 
     }
