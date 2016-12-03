@@ -148,6 +148,56 @@
 	        top:1px;
         }
 
+                input { 
+            font:12px arial; 
+        }
+
+        #chatarea{
+            position: absolute;
+            left: 75%;
+            width: 25%;
+            height: 100%;
+        }
+  
+  
+        #chatbox {
+            position: absolute;
+            text-align:left;
+            background:#fff;
+            border: 1px solid #000;
+            left:0%;
+            top:0%;
+            width: 100%;
+            height: 80%;
+            overflow:auto; 
+        }
+
+        #message{
+            border: 1px solid #000;
+            position: absolute;
+            left:0%;
+            top: 80%;
+            height: 20%;
+            width: 100%;
+        }
+  
+        #usermsg {
+            position: absolute;
+            left: 0%;
+            width: 80%;
+            height: 100%;
+            top: 0%;
+        }
+  
+        #submitmsg { 
+            border: 1px solid #000;
+            position: absolute;
+            left: 80%;
+            width: 20%; 
+            height: 100%;
+            top: 0%;
+        }
+
         /* HUD Styling*/
 
         #community {
@@ -427,32 +477,35 @@
 
 
     
-    <div id="bottomFunctions">
-        <div id="metaActions">
-            <button class="metaButton">Buy More</button>
-            <br>
-            <button class="metaButton">Hand History</button>
-            <br>
-            <button class="metaButton">Leave game</button>
+<div id="bottomFunctions">
+    <div id="metaActions">
+        <button class="metaButton" id="BuyMore">Buy More</button>
+        <br>
+        <button class="metaButton" id="HandHistory">Hand History</button>
+        <br>
+        <button class="metaButton" id="LeaveGame">Leave game</button>
+    </div>
+    <div id="gameActions">
+        <div id="actionButtons">
+            <button class="actionButton" id="Fold">Fold</button>
+            <button class="actionButton" id="Call">Call</button>
+            <button class="actionButton" id="AllIn">All In</button>
+            <button class="actionButton" id="Raise">Raise</button>
         </div>
-        <div id="gameActions">
-            <div id="actionButtons">
-                <button class="actionButton">Fold</button>
-                <button class="actionButton">Call</button>
-                <button class="actionButton">All In</button>
-                <button class="actionButton">Raise</button>
-            </div>
-            <br>
-            <div id="rangeSlider">
-                <input id="raiseSlider" type="range" min="0" max="100" value="0" event="updateTextInput(this.value);">
-                <input id="raiseInput" type="text" value="0" event="updateSlider(this.value);">
-            </div>
-        </div>
-        <div id="chatroom">
-            <div class="messages"></div>
-            <input type="text" name="typeMessge">
+        <br>
+        <div id="rangeSlider">
+            <input id="raiseSlider" type="range" min="0" max="100" value="0" oninput="updateTextInput(this.value);">
+            <input id="raiseInput" type="text" value="0" oninput="updateSlider(this.value);">
         </div>
     </div>
+    <div id="chatarea">
+        <div id="chatbox"></div>
+        <div id="message" action="">
+            <input name="usermsg" type="text" id="usermsg" size="63" />
+            <input name="submitmsg" type="submit" id="submitmsg" value="Send" />
+        </div>
+    </div>
+</div>
 
 
     @section scripts{
@@ -460,6 +513,44 @@
         <script type="text/javascript" src="~/Scripts/app.js"></script>
         <script src="http://ajax.aspnetcdn.com/ajax/signalr/jquery.signalr-2.1.0.min.js"></script>
         <script src="~/signalr/hubs"></script>
+        <script type="text/javascript">
+                //If user submits the form
+                $("#submitmsg").click(function () {
+
+                });
+                $("#Fold").click(function () {
+
+                });
+                $("#Call").click(function () {
+
+                });
+                $("#AllIn").click(function () {
+
+                });
+                $("#Raise").click(function () {
+
+                });
+                $("#BuyMore").click(function () {
+
+                });
+                $("#HandHistory").click(function () {
+
+                });
+                $("#LeaveGame").click(function () {
+
+                });
+
+                function updateSlider(value) {
+                    var x = document.getElementById('raiseSlider');
+                    x.value = value;
+                }
+
+                function updateTextInput(value) {
+                    var x = document.getElementById('raiseInput');
+                    x.value = value;
+                }
+
+        </script>
         <script>
             var chat = $.connection.myHub;
 
