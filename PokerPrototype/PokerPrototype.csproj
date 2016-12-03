@@ -209,6 +209,12 @@
     <Compile Include="Controllers\AjaxController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\RoomController.cs" />
+    <Compile Include="Game\HandAnalysis.cs" />
+    <Compile Include="Game\HandEvaluator.cs" />
+    <Compile Include="Game\HandIterator.cs" />
+    <Compile Include="Game\PocketHands.cs" />
+    <Compile Include="Game\PokerGame.cs" />
+    <Compile Include="Game\Program.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -228,9 +234,12 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Game\background.jpg" />
     <Content Include="Game\index.html" />
     <Content Include="Game\poker.js" />
+    <Content Include="Game\PokerPlayer.html" />
     <Content Include="Game\styles.css" />
+    <Content Include="Game\XPokerEval.PokerSource.KeithRule.csproj" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\ai.0.22.19-build00125.js" />

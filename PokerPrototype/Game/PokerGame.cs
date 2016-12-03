@@ -2,11 +2,21 @@
  * TODO:
  * -Rework functions relying on draw returning bool instead of a string
  * -Determine what happens in betting if player does not have money to call/raise
+ * -Add IDs for game managers to organize games database
+ * -Create GameData class purely to hold data/state. Game Manager shall 
+ * run all helper/poker functions json functions related to GameData
  * */
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Web;
 using System.Threading;
+using System.Data;
+using MySql.Data;
+using MySql.Data.MySqlClient;
+using System.Web.Helpers;
+using Newtonsoft.Json;
 using HoldemHand;
 //using System.Security.Cryptography;
 //using System.Linq;
@@ -16,7 +26,7 @@ using HoldemHand;
 namespace PokerGame
 {
     //http://stackoverflow.com/questions/273313/randomize-a-listt
-    //So I honestly have no idea what this does
+    //So I honestly how this works
     //Copied from link above, should improve Random so that our shuffle can handle 
     //threads, and reduce shuffling in predictable ways
     public static class ThreadSafeRandom
@@ -242,6 +252,9 @@ namespace PokerGame
         public bool folded{ get; set; }
     }
 
+
+
+
     //Responsible for: All game logic, processing all player actions
     //(call, raise, fold, check)
     //draw/deal cards,determine winner
@@ -424,22 +437,125 @@ namespace PokerGame
             }
             return winners;
         }
-        
+        public void award(List<string> winners)
+        {
+            //divide pot among all winners
+            int award = pot / (winners.Count);
+            for (int i = 0; i < activePlayers.Count; i++)
+            {
+                for (int x = 0; x < winners.Count; i++)
+                {
+                    if (activePlayers[i].ID.Equals(winners[i]))
+                    {
+                        activePlayers[i].currency += award;
+                    }
+                }
+            }
+            //pot is now empty
+            pot = 0;
+        }
+        //player joins midgame. Handles adjusting data, NOT actual network join
+        public void join(string IDtag, int money, string username)
+        {
+            Player temp = new Player();
+            temp.ID = IDtag;
+            temp.currency = money;
+            temp.name = username;
+            //add to inactive players, to become active next round
+            inactivePlayers.Add(temp);
+        }
+        //GET functions for integration with web interface
+        public string getBoard()
+        {
+            return board;
+        }
+        public int getBoardSize()
+        {
+            return boardCount;
+        }
+        public int getPlayerCurrency(string ID)
+        {
+            for (int i = 0; i < activePlayers.Count; i++)
+            {
+                if (activePlayers[i].ID.Equals(ID))
+                {
+                    return activePlayers[i].currency;
+                }
+            }
+            return 0;
+        }
+        public string getPlayerHand(string ID)
+        {
+            for (int i = 0; i < activePlayers.Count; i++)
+            {
+                if (activePlayers[i].ID.Equals(ID))
+                {
+                    return activePlayers[i].hand;
+                }
+            }
+            return "";
+        }
+        public bool getFold(string ID)
+        {
+            for (int i = 0; i < activePlayers.Count; i++)
+            {
+                if (activePlayers[i].ID.Equals(ID))
+                {
+                    return activePlayers[i].folded;
+                }
+            }
+            return false;
+        }
+        public int getPot()
+        {
+            return pot;
+        }       
+        public void updateState()
+        {
+            string output = JsonConvert.SerializeObject(this);
+            MySqlConnection Conn = new MySqlConnection("server=sql9.freemysqlhosting.net;database=sql9140372;user=sql9140372;password=WSx2C8iRZx;");
+            var cmd = new MySql.Data.MySqlClient.MySqlCommand();
+            Conn.Open();
+            cmd.Connection = Conn;
+            cmd.CommandText = "INSERT INTO games VALUES output ";
+            cmd.Prepare();
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            Conn.Close();
+        }
+        public string getState()
+        {
+            MySqlConnection Conn = new MySqlConnection("server=sql9.freemysqlhosting.net;database=sql9140372;user=sql9140372;password=WSx2C8iRZx;");
+            var cmd = new MySql.Data.MySqlClient.MySqlCommand();
+            Conn.Open();
+            cmd.Connection = Conn;
+            cmd.CommandText = "SELECT jsondata FROM games";
+            cmd.Prepare();
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            string json = (string)rdr["jsondata"];
+            //change to point to data class held by this
+            this = JsonConvert.DeserializeObject<GameManager>(json);
 
+            Conn.Close();
+        }
 
     }
     class Program
     {
         static void Main(string[] args)
         {
-            Deck testDeck = new Deck();
+   /*         Deck testDeck = new Deck();
             // testDeck.shuffle();
             testDeck.printDeck();
             Console.WriteLine(testDeck.checkShuffle());
             testDeck.checkDraw();
             testDeck.checkCleanup();
             Console.ReadLine();
-
+   */
+            GameManager manager = new GameManager();
+            manager.join("1", 100, "Bob");
+            manager.join("2", 150, "Joe");
+            manager.init();
+            manager.updateState();
         }
     }
 
