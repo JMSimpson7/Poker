@@ -515,49 +515,66 @@
         <script src="http://ajax.aspnetcdn.com/ajax/signalr/jquery.signalr-2.1.0.min.js"></script>
         <script src="~/signalr/hubs"></script>
         <script type="text/javascript">
-                //If user submits the form
-                $("#submitmsg").click(function () {
+            //If user submits the form
 
+            $(document).ready(function () {
+                $.ajax({
+                    type: "POST",
+                    url: 'Game/',
+                    data: "",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (msg) {
+                        $("#divResult").html("success");
+                    },
+                    error: function (e) {
+                        $("#divResult").html("Something Wrong.");
+                    }
                 });
-                $("#Fold").click(function () {
+            })
 
-                });
-                $("#Call").click(function () {
+            $("#submitmsg").click(function () {
 
-                });
-                $("#AllIn").click(function () {
+            });
+            $("#Fold").click(function () {
 
-                });
-                $("#Raise").click(function () {
-                    document.getElementById("raiseSlider");
-                    community.potSize = raiseSlider.value;
-                });
-                $("#BuyMore").click(function () {
-                    fund-modal;
-                });
-                $("#HandHistory").click(function () {
+            });
+            $("#Call").click(function () {
 
-                });
-                $("#LeaveGame").click(function () {
+            });
+            $("#AllIn").click(function () {
 
-                });
+            });
+            $("#Raise").click(function () {
+                document.getElementById("raiseSlider");
+                community.potSize += raiseSlider.value;
+            });
+            $("#BuyMore").click(function () {
 
-                function updateSlider(value) {
-                    var x = document.getElementById('raiseSlider');
-                    x.value = value;
-                }
+            });
+            $("#HandHistory").click(function () {
 
-                function updateTextInput(value) {
-                    var x = document.getElementById('raiseInput');
-                    x.value = value;
-                }
-                //If user submits the form
-                $("#submitmsg").click(function () {
-                    var clientmsg = $("#usermsg").val();
-                    $.post("post.php", { text: clientmsg });
-                    $("#usermsg").attr("value", "");
-                    return false;
-                });
+            });
+            $("#LeaveGame").click(function () {
+
+            });
+
+            function updateSlider(value) {
+                var x = document.getElementById('raiseSlider');
+                x.value = value;
+            }
+
+            function updateTextInput(value) {
+                var x = document.getElementById('raiseInput');
+                x.value = value;
+            }
+            //If user submits the form
+            $("#submitmsg").click(function () {
+                var clientmsg = $("#usermsg").val();
+                $.post("post.php", { text: clientmsg });
+                $("#usermsg").attr("value", "");
+                return false;
+            });
         </script>
         <script>
             var chat = $.connection.myHub;

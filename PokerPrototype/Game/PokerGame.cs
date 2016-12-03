@@ -1,10 +1,16 @@
 ﻿/*
+<<<<<<< HEAD
  * TODO:
  * -Rework functions relying on draw returning bool instead of a string
  * -Determine what happens in betting if player does not have money to call/raise
  * -Add IDs for game managers to organize games database
  * -Create GameData class purely to hold data/state. Game Manager shall 
  * run all helper/poker functions json functions related to GameData
+=======
+ * TODO (see if convert game manager to JSON)
+    -store each variable in column database
+    -retrieve said columns
+>>>>>>> 8a5eb18a55b7dcbe5cbc7c0f6f28898d6a0953e9
  * */
 
 using System;
@@ -18,6 +24,7 @@ using MySql.Data.MySqlClient;
 using System.Web.Helpers;
 using Newtonsoft.Json;
 using HoldemHand;
+using System.Web.Mvc;
 //using System.Security.Cryptography;
 //using System.Linq;
 //using System.Text;
@@ -175,8 +182,8 @@ namespace PokerGame
             //deck now contains all cards again
             shuffle();
         }
-//TESTING FUNCTIONS-----------------------------------------------------------------------------------
-//These functions are prefaced with either "check" or "print", and are used for testing exclusively
+        //TESTING FUNCTIONS-----------------------------------------------------------------------------------
+        //These functions are prefaced with either "check" or "print", and are used for testing exclusively
         public bool checkShuffle()
         {
             //first shuffle, then print deck for visual comparison
@@ -249,7 +256,7 @@ namespace PokerGame
         public string name { get; set; }
         public string hand { get; set; }
         //whether or not Player is in the current game (They have not folded)
-        public bool folded{ get; set; }
+        public bool folded { get; set; }
     }
 
 
@@ -317,14 +324,14 @@ namespace PokerGame
             //empty board
             board = "";
             //Cycle through player list twice to deal cards to players, done to aid potential graphics integration
-            for(int i=0; i< activePlayers.Count;i++)
+            for (int i = 0; i < activePlayers.Count; i++)
             {
                 //Overwrite will empty previous player hand
                 activePlayers[i].hand = deck.draw();
                 //set all active players as currently participating in round
                 activePlayers[i].folded = false;
             }
-            for(int i=0; i< activePlayers.Count;i++)
+            for (int i = 0; i < activePlayers.Count; i++)
             {
                 //append " " and second card to each players hand
                 activePlayers[i].hand += " " + deck.draw();
@@ -335,7 +342,7 @@ namespace PokerGame
         public void addBoard()
         {
             //if board is empty
-            if(board.Equals(""))
+            if (board.Equals(""))
             {
                 board = deck.draw();
                 boardCount = 1;
@@ -343,7 +350,7 @@ namespace PokerGame
             else
             {
                 //if room to add to board, add
-                if(boardCount<5)
+                if (boardCount < 5)
                 {
                     board += " " + deck.draw();
                     boardCount++;
@@ -356,7 +363,7 @@ namespace PokerGame
         {
             for (int i = 0; i < activePlayers.Count; i++)
             {
-                if(activePlayers[i].ID.Equals(ID))
+                if (activePlayers[i].ID.Equals(ID))
                 {
                     activePlayers[i].folded = true;
                 }
@@ -370,7 +377,7 @@ namespace PokerGame
                 if (activePlayers[i].ID.Equals(ID))
                 {
                     //amount must be greater than current call amt, and player must actually have the money
-                    if ((amount > callAmt) &&(activePlayers[i].currency-amount>=0))
+                    if ((amount > callAmt) && (activePlayers[i].currency - amount >= 0))
                     {
                         activePlayers[i].currency -= amount;
                         pot += amount;
@@ -400,9 +407,9 @@ namespace PokerGame
             List<string> winners = new List<string> { };
             //copy all non folded players into new list of potential winners
             List<Player> finalPlayers = new List<Player> { };
-            for(int i=0; i< activePlayers.Count;i++)
+            for (int i = 0; i < activePlayers.Count; i++)
             {
-                if(activePlayers[i].folded==false)
+                if (activePlayers[i].folded == false)
                 {
                     finalPlayers.Add(activePlayers[i]);
                 }
@@ -413,7 +420,7 @@ namespace PokerGame
             winners.Add(finalPlayers[0].ID);
             //comparison hand
             Hand h2;
-            for(int i=1; i< finalPlayers.Count;i++)
+            for (int i = 1; i < finalPlayers.Count; i++)
             {
                 //for every other active player examine hand, compare, replace if necessary
                 h2 = new Hand(finalPlayers[i].hand, board);
@@ -425,7 +432,7 @@ namespace PokerGame
                     winners.Add(finalPlayers[0].ID);
                     h1 = h2;
                 }
-                else if(h1>h2)
+                else if (h1 > h2)
                 {
                     //do nothing
                 }
@@ -482,7 +489,10 @@ namespace PokerGame
                     return activePlayers[i].currency;
                 }
             }
+<<<<<<< HEAD
             return 0;
+=======
+>>>>>>> 8a5eb18a55b7dcbe5cbc7c0f6f28898d6a0953e9
         }
         public string getPlayerHand(string ID)
         {
@@ -493,7 +503,10 @@ namespace PokerGame
                     return activePlayers[i].hand;
                 }
             }
+<<<<<<< HEAD
             return "";
+=======
+>>>>>>> 8a5eb18a55b7dcbe5cbc7c0f6f28898d6a0953e9
         }
         public bool getFold(string ID)
         {
@@ -504,11 +517,15 @@ namespace PokerGame
                     return activePlayers[i].folded;
                 }
             }
+<<<<<<< HEAD
             return false;
+=======
+>>>>>>> 8a5eb18a55b7dcbe5cbc7c0f6f28898d6a0953e9
         }
         public int getPot()
         {
             return pot;
+<<<<<<< HEAD
         }       
         public void updateState()
         {
@@ -537,7 +554,17 @@ namespace PokerGame
 
             Conn.Close();
         }
+=======
+        }
+        public string updateState()
+        {
 
+        }
+        public string retrieveState()
+        {
+>>>>>>> 8a5eb18a55b7dcbe5cbc7c0f6f28898d6a0953e9
+
+        }
     }
     class Program
     {
