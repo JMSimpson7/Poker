@@ -4,12 +4,7 @@
  * -Rework functions relying on draw returning bool instead of a string
  * -Determine what happens in betting if player does not have money to call/raise
  * -Add IDs for game managers to organize games database
- * -Create GameData class purely to hold data/state. Game Manager shall 
- * run all helper/poker functions json functions related to GameData
-
- * TODO (see if convert game manager to JSON)
-    -store each variable in column database
-    -retrieve said columns
+ * -Add game controller to controller folder in overall project
 
  * */
 
@@ -47,6 +42,7 @@ namespace PokerGame
             get { return Local ?? (Local = new Random(unchecked(Environment.TickCount * 31 + Thread.CurrentThread.ManagedThreadId))); }
         }
     }
+    //MODEL
     public class Card
     {
         //future note, treat all 1's as spades. Pseudo "14" and "1"
@@ -58,6 +54,7 @@ namespace PokerGame
             Console.WriteLine("{0}", this.value);
         }
     }
+    //MODEL
     public class Deck
     {
         //General Master List of cards. We're keeping this just in case
@@ -262,6 +259,14 @@ namespace PokerGame
 
     //Holds all data necessary for GameManager
     //Will be serialized to JSON for storage/retrieval of game state
+    //MODEL
+ //    * -GameData needs to include turn order and who's turn it is, so controller can reference that and 
+ //* act accordingly on each async method
+ //* getCurrentPlayer()
+// * cycle()
+// * addPlayerTurn()//add player in the cycle of turns
+
+
     public class GameData
     {
         //Attributes-------------------------------------------------------------------
@@ -279,10 +284,14 @@ namespace PokerGame
         public string board { get; set; }
         //list representation of cards currently in the board. Included in case needed for graphical representation
         public List<Card> boardCards;
-        //list of active players currently in game        
+        //list of active players currently in game. Players are listed in turn order (index 0 goes first, then index 1, etc)        
         public List<Player> activePlayers;
         //list of inactive players not in the game. Included for potential integration issues with SignalR
         public List<Player> inactivePlayers;
+        //two ways to track which player is currently going
+        public Player currentPlayer { get; set; }
+        public int currentIndex { get; set; }
+        public bool gameOver { get; set; }
         public Deck deck;
 
         public GameData()
@@ -300,6 +309,11 @@ namespace PokerGame
     //(call, raise, fold, check)
     //draw/deal cards,determine winner
     //SignalR Hub handles updating clients/maintaining turn order
+    //CONTROLLER
+    //* getCurrentPlayer()
+    // * cycle()
+    // * addPlayerTurn()//add player in the cycle of turns
+    // * gameOver()
     public class GameManager
     {
         GameData data;
@@ -346,6 +360,8 @@ namespace PokerGame
                 //append " " and second card to each players hand
                 data.activePlayers[i].hand += " " + data.deck.draw();
             }
+            data.currentIndex = 0;
+            data.currentPlayer = data.activePlayers[0];
         }
 
         //adds card to board
@@ -367,7 +383,57 @@ namespace PokerGame
                 }
             }
         }
+        //cycle to next player's turn. If they have folded, move on to the next player.
+        //call cycle AFTER current player is done moving
+        public int cycle()
+        {
+            int i = data.currentIndex;
+            //if we have reached the last player in the list
+            if(i==data.activePlayers.Count-1)
+            {
+                //restart
+                i = 0;
+            }
+            for(int x=i; x< data.activePlayers.Count;x++)
+            {
+                if(data.activePlayers[x].folded==false)
+                {
+                    data.currentIndex = x;
+                    data.currentPlayer = data.activePlayers[x];
+                    //return index of next player to move
+                    return x;
+                }
+            }
+            //error, no one can move (everyone managed to all fold).
+            return -1;
+        }
+        //checks whether game is over or not
+        //in event of "true" call getWinner to determine winner of the game
+        public bool gameOver()
+        {
+            //how many players are still allowed to move?
+            int ablePlayers = 0;
 
+            for(int i=0; i < data.activePlayers.Count;i++)
+            {
+                //if they haven't folded, they are able to move
+                if(data.activePlayers[i].folded==false)
+                {
+                    ablePlayers++;
+                }
+            }
+            //only one or fewer players remaining
+            if(ablePlayers<=1)
+            {
+                return true;
+            }
+            //if five cards on the board
+            if(data.boardCount==5)
+            {
+                return true;
+            }
+            return false;
+        }
         //marks player as folded.
         public void fold(string ID)
         {
@@ -536,14 +602,14 @@ namespace PokerGame
         }
         public void updateState()
         {
-            string command= "INSERT INTO games (jsondata) VALUES ('" + JsonConvert.SerializeObject(data) + "')";
+            string output = JsonConvert.SerializeObject(data);
             MySqlConnection Conn = new MySqlConnection("server=sql9.freemysqlhosting.net;database=sql9140372;user=sql9140372;password=WSx2C8iRZx;");
             var cmd = new MySql.Data.MySqlClient.MySqlCommand();
-            cmd.CommandText = command;
+            Conn.Open();
             cmd.Connection = Conn;
-            cmd.Connection.Open();
+            cmd.CommandText = "INSERT INTO games VALUES output ";
             cmd.Prepare();
-            cmd.ExecuteNonQuery();
+            MySqlDataReader rdr = cmd.ExecuteReader();
             Conn.Close();
         }
         public string getState()
@@ -584,4 +650,7 @@ class Program
         manager.init();
         manager.updateState();
     }
+}
+
+
 }
