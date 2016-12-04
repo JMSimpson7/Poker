@@ -321,30 +321,30 @@ namespace PokerGame
         public void init()
         {
             //all inactivePlayers become activePlayers here
-            for (int i = 0; i < inactivePlayers.Count; i++)
+            for (int i = 0; i < data.inactivePlayers.Count; i++)
             {
-                activePlayers.Add(inactivePlayers[i]);
+                data.activePlayers.Add(data.inactivePlayers[i]);
             }
-            inactivePlayers.Clear();
+            data.inactivePlayers.Clear();
             //clean and shuffle deck
-            deck.cleanup();
-            deck.shuffle();
+            data.deck.cleanup();
+            data.deck.shuffle();
             //reset board count to zero
-            boardCount = 0;
+            data.boardCount = 0;
             //empty board
-            board = "";
+            data.board = "";
             //Cycle through player list twice to deal cards to players, done to aid potential graphics integration
-            for (int i = 0; i < activePlayers.Count; i++)
+            for (int i = 0; i < data.activePlayers.Count; i++)
             {
                 //Overwrite will empty previous player hand
-                activePlayers[i].hand = deck.draw();
+                data.activePlayers[i].hand = data.deck.draw();
                 //set all active players as currently participating in round
-                activePlayers[i].folded = false;
+                data.activePlayers[i].folded = false;
             }
-            for (int i = 0; i < activePlayers.Count; i++)
+            for (int i = 0; i < data.activePlayers.Count; i++)
             {
                 //append " " and second card to each players hand
-                activePlayers[i].hand += " " + deck.draw();
+                data.activePlayers[i].hand += " " + data.deck.draw();
             }
         }
 
@@ -536,14 +536,14 @@ namespace PokerGame
         }
         public void updateState()
         {
-            string output = JsonConvert.SerializeObject(data);
+            string command= "INSERT INTO games (jsondata) VALUES ('" + JsonConvert.SerializeObject(data) + "')";
             MySqlConnection Conn = new MySqlConnection("server=sql9.freemysqlhosting.net;database=sql9140372;user=sql9140372;password=WSx2C8iRZx;");
             var cmd = new MySql.Data.MySqlClient.MySqlCommand();
-            Conn.Open();
+            cmd.CommandText = command;
             cmd.Connection = Conn;
-            cmd.CommandText = "INSERT INTO games VALUES output ";
+            cmd.Connection.Open();
             cmd.Prepare();
-            MySqlDataReader rdr = cmd.ExecuteReader();
+            cmd.ExecuteNonQuery();
             Conn.Close();
         }
         public string getState()
@@ -584,7 +584,4 @@ class Program
         manager.init();
         manager.updateState();
     }
-}
-
-
 }

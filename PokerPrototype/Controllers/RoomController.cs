@@ -23,5 +23,6 @@ namespace PokerPrototype.Controllers
                 return View("/Views/Home/Landing.cshtml");
             }
         }
+
     }
 }

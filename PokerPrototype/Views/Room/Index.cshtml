@@ -518,20 +518,16 @@
             //If user submits the form
 
             $(document).ready(function () {
-                $.ajax({
-                    type: "POST",
-                    url: 'Game/',
-                    data: "",
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    success: function (msg) {
-                        $("#divResult").html("success");
-                    },
-                    error: function (e) {
-                        $("#divResult").html("Something Wrong.");
-                    }
-                });
+                $.post("/ajax/GameInit", {
+
+                },
+                readyGame);
             })
+
+            function readyGame(response) {
+                ;
+            }
+
 
             $("#submitmsg").click(function () {
 
@@ -547,8 +543,16 @@
             });
             $("#Raise").click(function () {
                 document.getElementById("raiseSlider");
-                community.potSize += raiseSlider.value;
+                $.post("/ajax/GameInit", {
+                    bet: $('#raiseSlider').value(),
+                },
+                updatePot);
             });
+
+            function readyGame(response) {
+                ;
+            }
+
             $("#BuyMore").click(function () {
 
             });
@@ -570,10 +574,7 @@
             }
             //If user submits the form
             $("#submitmsg").click(function () {
-                var clientmsg = $("#usermsg").val();
-                $.post("post.php", { text: clientmsg });
-                $("#usermsg").attr("value", "");
-                return false;
+
             });
         </script>
         <script>

@@ -1,4 +1,5 @@
 ﻿using PokerPrototype.Models;
+using PokerGame;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -62,6 +63,15 @@ namespace PokerPrototype.Controllers
         {
             
             return Json(new RoomList(), JsonRequestBehavior.AllowGet);
+        }
+
+        public  void GameInit()
+        {
+            GameManager game = new GameManager();
+            game.join("1", 100, "Bob");
+            game.join("2", 150, "Joe");
+            game.init();
+            game.updateState();
         }
     }
 }
