@@ -1,16 +1,16 @@
 ﻿/*
-<<<<<<< HEAD
+
  * TODO:
  * -Rework functions relying on draw returning bool instead of a string
  * -Determine what happens in betting if player does not have money to call/raise
  * -Add IDs for game managers to organize games database
  * -Create GameData class purely to hold data/state. Game Manager shall 
  * run all helper/poker functions json functions related to GameData
-=======
+
  * TODO (see if convert game manager to JSON)
     -store each variable in column database
     -retrieve said columns
->>>>>>> 8a5eb18a55b7dcbe5cbc7c0f6f28898d6a0953e9
+
  * */
 
 using System;
@@ -25,6 +25,7 @@ using System.Web.Helpers;
 using Newtonsoft.Json;
 using HoldemHand;
 using System.Web.Mvc;
+using PokerGame;
 //using System.Security.Cryptography;
 //using System.Linq;
 //using System.Text;
@@ -259,7 +260,40 @@ namespace PokerGame
         public bool folded { get; set; }
     }
 
+    //Holds all data necessary for GameManager
+    //Will be serialized to JSON for storage/retrieval of game state
+    public class GameData
+    {
+        //Attributes-------------------------------------------------------------------
+        //ID of room itself. Currently not used
+        public int roomID { get; set; }
+        //maximum size of room, default to nine;
+        public int roomCap { get; set; }
+        //last bet number. calls must meet this, raises must beat it
+        public int callAmt { get; set; }
+        //total amount in pot, init to zero
+        public int pot { get; set; }
+        //potential check against too many cards on board
+        public int boardCount { get; set; }
+        //string representation of board. Included for internal hand evaluator.
+        public string board { get; set; }
+        //list representation of cards currently in the board. Included in case needed for graphical representation
+        public List<Card> boardCards;
+        //list of active players currently in game        
+        public List<Player> activePlayers;
+        //list of inactive players not in the game. Included for potential integration issues with SignalR
+        public List<Player> inactivePlayers;
+        public Deck deck;
 
+        public GameData()
+        {
+            boardCards = new List<Card> { };
+            activePlayers = new List<Player> { };
+            inactivePlayers = new List<Player> { };
+            deck = new Deck();
+        }
+
+    }
 
 
     //Responsible for: All game logic, processing all player actions
@@ -268,36 +302,12 @@ namespace PokerGame
     //SignalR Hub handles updating clients/maintaining turn order
     public class GameManager
     {
-        //Attributes-------------------------------------------------------------------
-        //maximum size of room, default to nine;
-        int roomCap;
-        //last bet number. calls must meet this, raises must beat it
-        int callAmt;
-        //total amount in pot, init to zero
-        int pot;
-        //potential check against too many cards on board
-        int boardCount;
-        //string representation of board. Included for internal hand evaluator.
-        string board;
-        //list representation of cards currently in the board. Included in case needed for graphical representation
-        List<Card> boardCards;
-        //list of active players currently in game        
-        List<Player> activePlayers;
-        //list of inactive players not in the game. Included for potential integration issues with SignalR
-        List<Player> inactivePlayers;
-        Deck deck;
-
+        GameData data;
         //include parameter default overrides ("int size=9") later
         public GameManager()
         {
-            roomCap = 6;
-            pot = 0;
-            boardCount = 0;
-            board = "";
-            boardCards = new List<Card> { };
-            activePlayers = new List<Player> { };
-            inactivePlayers = new List<Player> { };
-            deck = new Deck();
+            data = new PokerGame.GameData();
+
         }
         //Functions--------------------------------------------------------------------
         //TODO: \\ check(), blind(char p, );
@@ -342,18 +352,18 @@ namespace PokerGame
         public void addBoard()
         {
             //if board is empty
-            if (board.Equals(""))
+            if (data.board.Equals(""))
             {
-                board = deck.draw();
-                boardCount = 1;
+                data.board = data.deck.draw();
+                data.boardCount = 1;
             }
             else
             {
                 //if room to add to board, add
-                if (boardCount < 5)
+                if (data.boardCount < 5)
                 {
-                    board += " " + deck.draw();
-                    boardCount++;
+                    data.board += " " + data.deck.draw();
+                    data.boardCount++;
                 }
             }
         }
@@ -361,27 +371,27 @@ namespace PokerGame
         //marks player as folded.
         public void fold(string ID)
         {
-            for (int i = 0; i < activePlayers.Count; i++)
+            for (int i = 0; i < data.activePlayers.Count; i++)
             {
-                if (activePlayers[i].ID.Equals(ID))
+                if (data.activePlayers[i].ID.Equals(ID))
                 {
-                    activePlayers[i].folded = true;
+                    data.activePlayers[i].folded = true;
                 }
             }
         }
         //validates and checks raising
         public void raise(string ID, int amount)
         {
-            for (int i = 0; i < activePlayers.Count; i++)
+            for (int i = 0; i < data.activePlayers.Count; i++)
             {
-                if (activePlayers[i].ID.Equals(ID))
+                if (data.activePlayers[i].ID.Equals(ID))
                 {
                     //amount must be greater than current call amt, and player must actually have the money
-                    if ((amount > callAmt) && (activePlayers[i].currency - amount >= 0))
+                    if ((amount > data.callAmt) && (data.activePlayers[i].currency - amount >= 0))
                     {
-                        activePlayers[i].currency -= amount;
-                        pot += amount;
-                        callAmt = amount;
+                        data.activePlayers[i].currency -= amount;
+                        data.pot += amount;
+                        data.callAmt = amount;
                     }
                 }
             }
@@ -389,14 +399,14 @@ namespace PokerGame
         //validates and checks calling
         public void call(string ID)
         {
-            for (int i = 0; i < activePlayers.Count; i++)
+            for (int i = 0; i < data.activePlayers.Count; i++)
             {
-                if (activePlayers[i].ID.Equals(ID))
+                if (data.activePlayers[i].ID.Equals(ID))
                 {
-                    if (activePlayers[i].currency - callAmt >= 0)
+                    if (data.activePlayers[i].currency - data.callAmt >= 0)
                     {
-                        activePlayers[i].currency -= callAmt;
-                        pot += callAmt;
+                        data.activePlayers[i].currency -= data.callAmt;
+                        data.pot += data.callAmt;
                     }
                 }
             }
@@ -407,15 +417,15 @@ namespace PokerGame
             List<string> winners = new List<string> { };
             //copy all non folded players into new list of potential winners
             List<Player> finalPlayers = new List<Player> { };
-            for (int i = 0; i < activePlayers.Count; i++)
+            for (int i = 0; i < data.activePlayers.Count; i++)
             {
-                if (activePlayers[i].folded == false)
+                if (data.activePlayers[i].folded == false)
                 {
-                    finalPlayers.Add(activePlayers[i]);
+                    finalPlayers.Add(data.activePlayers[i]);
                 }
             }
             //start by examining first hand
-            Hand h1 = new Hand(finalPlayers[0].hand, board);
+            Hand h1 = new Hand(finalPlayers[0].hand, data.board);
             //default to first hand being winner (a hand better than no hand)
             winners.Add(finalPlayers[0].ID);
             //comparison hand
@@ -423,7 +433,7 @@ namespace PokerGame
             for (int i = 1; i < finalPlayers.Count; i++)
             {
                 //for every other active player examine hand, compare, replace if necessary
-                h2 = new Hand(finalPlayers[i].hand, board);
+                h2 = new Hand(finalPlayers[i].hand, data.board);
 
                 //new hand is better
                 if (h2 > h1)
@@ -447,19 +457,19 @@ namespace PokerGame
         public void award(List<string> winners)
         {
             //divide pot among all winners
-            int award = pot / (winners.Count);
-            for (int i = 0; i < activePlayers.Count; i++)
+            int award = data.pot / (winners.Count);
+            for (int i = 0; i < data.activePlayers.Count; i++)
             {
                 for (int x = 0; x < winners.Count; i++)
                 {
-                    if (activePlayers[i].ID.Equals(winners[i]))
+                    if (data.activePlayers[i].ID.Equals(winners[i]))
                     {
-                        activePlayers[i].currency += award;
+                        data.activePlayers[i].currency += award;
                     }
                 }
             }
             //pot is now empty
-            pot = 0;
+            data.pot = 0;
         }
         //player joins midgame. Handles adjusting data, NOT actual network join
         public void join(string IDtag, int money, string username)
@@ -469,67 +479,64 @@ namespace PokerGame
             temp.currency = money;
             temp.name = username;
             //add to inactive players, to become active next round
-            inactivePlayers.Add(temp);
+            data.inactivePlayers.Add(temp);
         }
         //GET functions for integration with web interface
         public string getBoard()
         {
-            return board;
+            return data.board;
         }
         public int getBoardSize()
         {
-            return boardCount;
+            return data.boardCount;
         }
         public int getPlayerCurrency(string ID)
         {
-            for (int i = 0; i < activePlayers.Count; i++)
+            for (int i = 0; i < data.activePlayers.Count; i++)
             {
-                if (activePlayers[i].ID.Equals(ID))
+                if (data.activePlayers[i].ID.Equals(ID))
                 {
-                    return activePlayers[i].currency;
+                    return data.activePlayers[i].currency;
                 }
             }
-<<<<<<< HEAD
+
             return 0;
-=======
->>>>>>> 8a5eb18a55b7dcbe5cbc7c0f6f28898d6a0953e9
+
         }
         public string getPlayerHand(string ID)
         {
-            for (int i = 0; i < activePlayers.Count; i++)
+            for (int i = 0; i < data.activePlayers.Count; i++)
             {
-                if (activePlayers[i].ID.Equals(ID))
+                if (data.activePlayers[i].ID.Equals(ID))
                 {
-                    return activePlayers[i].hand;
+                    return data.activePlayers[i].hand;
                 }
             }
-<<<<<<< HEAD
+
             return "";
-=======
->>>>>>> 8a5eb18a55b7dcbe5cbc7c0f6f28898d6a0953e9
+
         }
         public bool getFold(string ID)
         {
-            for (int i = 0; i < activePlayers.Count; i++)
+            for (int i = 0; i < data.activePlayers.Count; i++)
             {
-                if (activePlayers[i].ID.Equals(ID))
+                if (data.activePlayers[i].ID.Equals(ID))
                 {
-                    return activePlayers[i].folded;
+                    return data.activePlayers[i].folded;
                 }
             }
-<<<<<<< HEAD
+
             return false;
-=======
->>>>>>> 8a5eb18a55b7dcbe5cbc7c0f6f28898d6a0953e9
+
         }
         public int getPot()
         {
-            return pot;
-<<<<<<< HEAD
-        }       
+            return data.pot;
+
+        }
         public void updateState()
         {
-            string output = JsonConvert.SerializeObject(this);
+            string output = JsonConvert.SerializeObject(data);
             MySqlConnection Conn = new MySqlConnection("server=sql9.freemysqlhosting.net;database=sql9140372;user=sql9140372;password=WSx2C8iRZx;");
             var cmd = new MySql.Data.MySqlClient.MySqlCommand();
             Conn.Open();
@@ -550,41 +557,34 @@ namespace PokerGame
             MySqlDataReader rdr = cmd.ExecuteReader();
             string json = (string)rdr["jsondata"];
             //change to point to data class held by this
-            this = JsonConvert.DeserializeObject<GameManager>(json);
+            data = JsonConvert.DeserializeObject<GameData>(json);
 
             Conn.Close();
+            return json;
         }
-=======
-        }
-        public string updateState()
-        {
 
         }
-        public string retrieveState()
-        {
->>>>>>> 8a5eb18a55b7dcbe5cbc7c0f6f28898d6a0953e9
 
-        }
-    }
-    class Program
+}
+class Program
+{
+    static void Main(string[] args)
     {
-        static void Main(string[] args)
-        {
-   /*         Deck testDeck = new Deck();
-            // testDeck.shuffle();
-            testDeck.printDeck();
-            Console.WriteLine(testDeck.checkShuffle());
-            testDeck.checkDraw();
-            testDeck.checkCleanup();
-            Console.ReadLine();
-   */
-            GameManager manager = new GameManager();
-            manager.join("1", 100, "Bob");
-            manager.join("2", 150, "Joe");
-            manager.init();
-            manager.updateState();
-        }
+        /*         Deck testDeck = new Deck();
+                 // testDeck.shuffle();
+                 testDeck.printDeck();
+                 Console.WriteLine(testDeck.checkShuffle());
+                 testDeck.checkDraw();
+                 testDeck.checkCleanup();
+                 Console.ReadLine();
+        */
+        GameManager manager = new GameManager();
+        manager.join("1", 100, "Bob");
+        manager.join("2", 150, "Joe");
+        manager.init();
+        manager.updateState();
     }
+}
 
 
 }
