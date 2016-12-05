@@ -5,7 +5,22 @@
  * -Determine what happens in betting if player does not have money to call/raise
  * -Add IDs for game managers to organize games database
  * -Add game controller to controller folder in overall project
+ * 
+ * Player requests for room state
+ * lookup what room player is in (get the room ID)
+ * fetch room state from database (primary key =room ID)
+* make sure current user is actually in that room (cookies)
+ * check that user can move
+ * process move -> my job!
+ * update every player with new game state, without giving info of cards they can't see
+ * 
 
+ * 
+ * change getRoominfo to joinroom
+ *  need to check if they can join
+ *  if so add to signalr group
+ *  broadcast to rest of group after updating game state
+ *  
  * */
 
 using System;
@@ -292,10 +307,12 @@ namespace PokerGame
         public Player currentPlayer { get; set; }
         public int currentIndex { get; set; }
         public bool gameOver { get; set; }
+        public string connID { get; set; }
         public Deck deck;
 
-        public GameData()
+        public GameData(string connection)
         {
+            connID = connection;
             boardCards = new List<Card> { };
             activePlayers = new List<Player> { };
             inactivePlayers = new List<Player> { };
@@ -556,6 +573,10 @@ namespace PokerGame
         {
             return data.boardCount;
         }
+        public Player getCurrentPlayer()
+        {
+            return data.currentPlayer;
+        }
         public int getPlayerCurrency(string ID)
         {
             for (int i = 0; i < data.activePlayers.Count; i++)
@@ -653,4 +674,3 @@ class Program
 }
 
 
-}

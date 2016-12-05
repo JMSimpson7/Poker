@@ -243,39 +243,39 @@
             bottom: 27%;
             left: 50%;
             transform: translate(-50%, 0%);
-            /*visibility: hidden;*/
+            
         }
 
         #hud2 {
             top: 9%;
             left: 50%;
             transform: translate(-50%, 0%);
-            /*visibility: hidden;*/
+           
         }
 
         #hud3 {
             top: 15%;
             left: 2%;
-            /*transform: translate(-50%, 0%);*/
-            visibility: hidden;
+            
+            
         }
 
         #hud4 {
             top: 50%;
             left: 2%;
-            visibility: hidden;
+            
         }
 
         #hud5 {
             top: 15%;
             right: 2%;
-            visibility: hidden;
+            
         }
 
         #hud6 {
             top: 50%;
             right: 2%;
-            visibility: hidden;
+            
         }
 
         .playerCards {
@@ -522,6 +522,8 @@
 
                 },
                 readyGame);
+                var username= @Model.username;
+
             })
 
             function readyGame(response) {
@@ -533,7 +535,13 @@
 
             });
             $("#Fold").click(function () {
-
+                $.post("/game/fold", {
+                    /*email: $('#register-email').val(),
+                    username: $('#register-username').val(),
+                    password: $('#register-password').val(),
+                    confirm: $('#register-confirm').val()*/
+                    username
+                });
             });
             $("#Call").click(function () {
 
